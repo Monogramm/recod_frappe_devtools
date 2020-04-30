@@ -9,7 +9,7 @@ locale
 *.egg-info
 dist/
 build/
-erpnext_template/docs/current
+recod_frappe_devtools/docs/current
 .vscode
 .idea/
 *.iml

@@ -1,7 +1,7 @@
 {
   "project": {
-    "name": "erpnext_template",
-    "description": "TODO_APP_DESCRIPTION",
+    "name": "recod_frappe_devtools",
+    "description": "Frappe application to provide more/better development tools.",
     "version": "0.0.1"
   }
 }

@@ -1,33 +1,23 @@
 [![License: AGPL v3][uri_license_image]][uri_license]
-[![Docs](https://img.shields.io/badge/Docs-Github%20Pages-blue)](https://monogramm.github.io/erpnext_template/)
+[![Docs](https://img.shields.io/badge/Docs-Github%20Pages-blue)](https://monogramm.github.io/recod_frappe_devtools/)
 [![gitmoji-changelog](https://img.shields.io/badge/Changelog-gitmoji-blue.svg)](https://github.com/frinyvonnick/gitmoji-changelog)
-[![Managed with Taiga.io](https://img.shields.io/badge/managed%20with-TAIGA.io-709f14.svg)](https://tree.taiga.io/project/monogrammbot-monogrammerpnext_template/ "Managed with Taiga.io")
-[![Build Status](https://travis-ci.org/Monogramm/erpnext_template.svg)](https://travis-ci.org/Monogramm/erpnext_template)
-[![Coverage Status](https://coveralls.io/repos/github/Monogramm/erpnext_template/badge.svg?branch=master)](https://coveralls.io/github/Monogramm/erpnext_template?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/347f10fa884446c492b6ba8cd7f4d7fc)](https://app.codacy.com/gh/Monogramm/erpnext_template?utm_source=github.com&utm_medium=referral&utm_content=Monogramm/erpnext_template&utm_campaign=Badge_Grade_Dashboard)
+[![Managed with Taiga.io](https://img.shields.io/badge/managed%20with-TAIGA.io-709f14.svg)](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_devtools/ "Managed with Taiga.io")
+[![Build Status](https://travis-ci.org/Monogramm/recod_frappe_devtools.svg)](https://travis-ci.org/Monogramm/recod_frappe_devtools)
+[![Coverage Status](https://coveralls.io/repos/github/Monogramm/recod_frappe_devtools/badge.svg?branch=master)](https://coveralls.io/github/Monogramm/recod_frappe_devtools?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/347f10fa884446c492b6ba8cd7f4d7fc)](https://app.codacy.com/gh/Monogramm/recod_frappe_devtools?utm_source=github.com&utm_medium=referral&utm_content=Monogramm/recod_frappe_devtools&utm_campaign=Badge_Grade_Dashboard)
 <!--
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/273679c703bb4f02ba1aacb350f7b1c5)](https://www.codacy.com/gh/Monogramm/erpnext_template?utm_source=github.com&utm_medium=referral&utm_content=Monogramm/erpnext_template&utm_campaign=Badge_Coverage)
-[![codecov](https://codecov.io/gh/Monogramm/erpnext_template/branch/master/graph/badge.svg)](https://codecov.io/gh/Monogramm/erpnext_template)
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Monogramm/erpnext_template/?ref=repository-badge)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/273679c703bb4f02ba1aacb350f7b1c5)](https://www.codacy.com/gh/Monogramm/recod_frappe_devtools?utm_source=github.com&utm_medium=referral&utm_content=Monogramm/recod_frappe_devtools&utm_campaign=Badge_Coverage)
+[![codecov](https://codecov.io/gh/Monogramm/recod_frappe_devtools/branch/master/graph/badge.svg)](https://codecov.io/gh/Monogramm/recod_frappe_devtools)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/Monogramm/recod_frappe_devtools/?ref=repository-badge)
 -->
 
-<!--
+## Recod Frappe DevTools
 
-Template variables to replace in ALL files:
-* ERPNext Template: Name of the application
-* erpnext_template: GitHub slug of the original application
-* TODO_APP_DESCRIPTION: Uppercase value of the GitHub slug
-* TODO_APP_USAGE: Application description
-
--->
-
-## ERPNext Template
-
-> :alembic: TODO_APP_DESCRIPTION
+> :alembic: Frappe application to provide more/better development tools.
 
 ## :blue_book: Docs
 
-See GitHub Pages at [monogramm.github.io/erpnext_template](https://monogramm.github.io/erpnext_template/).
+See GitHub Pages at [monogramm.github.io/recod_frappe_devtools](https://monogramm.github.io/recod_frappe_devtools/).
 
 ## :chart_with_upwards_trend: Changes
 
@@ -37,15 +27,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## :bookmark: Roadmap
 
-See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammerpnext_template/ "Taiga.io monogrammbot-monogrammerpnext_template")
+See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_devtools/ "Taiga.io monogrammbot-monogrammrecod_frappe_devtools")
 
 ## :construction: Install
 
 **Install Frappe application**
 
 ```sh
-bench get-app https://github.com/Monogramm/erpnext_template
-bench install-app erpnext_template
+bench get-app https://github.com/Monogramm/recod_frappe_devtools
+bench install-app recod_frappe_devtools
 ```
 
 Check [Frappe Install](https://github.com/frappe/frappe/wiki/The-Hitchhiker%27s-Guide-to-Installing-Frappe-on-Linux) for more details.
@@ -53,7 +43,7 @@ Check [Frappe Install](https://github.com/frappe/frappe/wiki/The-Hitchhiker%27s-
 ## :white_check_mark: Run tests
 
 ```sh
-bench run-tests --app erpnext_template
+bench run-tests --app recod_frappe_devtools
 ```
 
 Check [Frappe Unit Testing](https://frappe.io/docs/user/en/guides/automated-testing/unit-testing) for more details.
@@ -64,12 +54,14 @@ When installing Frappe app, the following python requirements will be installed:
 
 How to use this application:
 
-TODO_APP_USAGE
+```
+bench build-app-docs
+```
 
 <!--
 [TODO] If project is deployed to DockerHub:
 ## :whale: Supported tags
-[Dockerhub monogramm/erpnext_template](https://hub.docker.com/r/monogramm/erpnext_template/)
+[Dockerhub monogramm/recod_frappe_devtools](https://hub.docker.com/r/monogramm/recod_frappe_devtools/)
 * `latest`
 -->
 
@@ -87,7 +79,7 @@ TODO_APP_USAGE
 
 ## :handshake: Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Monogramm/erpnext_template/issues).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/Monogramm/recod_frappe_devtools/issues).
 [Check the contributing guide](./CONTRIBUTING.md).<br />
 
 ## :thumbsup: Show your support

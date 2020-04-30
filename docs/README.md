@@ -1,6 +1,6 @@
-# **erpnext_template** Documentation site
+# **recod_frappe_devtools** Documentation site
 
-This directory contains the code for the **ERPNext Template** docs site, [monogramm.github.io/erpnext_template](https://monogramm.github.io/erpnext_template).
+This directory contains the code for the **Recod Frappe DevTools** docs site, [monogramm.github.io/recod_frappe_devtools](https://monogramm.github.io/recod_frappe_devtools).
 
 References:
 
@@ -8,4 +8,4 @@ References:
 
 ## Contributing
 
-For information about contributing, see the [Contributing page](https://github.com/Monogramm/erpnext_template/blob/master/CONTRIBUTING.md).
+For information about contributing, see the [Contributing page](https://github.com/Monogramm/recod_frappe_devtools/blob/master/CONTRIBUTING.md).

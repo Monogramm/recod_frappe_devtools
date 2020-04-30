@@ -6,17 +6,17 @@
 from __future__ import unicode_literals
 
 
-source_link = "https://github.com/Monogramm/erpnext_template"
-docs_base_url = "https://monogramm.github.io/erpnext_template"
-headline = "TODO_APP_DESCRIPTION"
-sub_heading = "TODO_APP_USAGE"
+source_link = "https://github.com/Monogramm/recod_frappe_devtools"
+docs_base_url = "https://monogramm.github.io/recod_frappe_devtools"
+headline = "Frappe application to provide more/better development tools."
+sub_heading = "Build app documentation and development helpers."
 
 
 def get_context(context):
     """Returns the application documentation context.
 
      :param context: application documentation context"""
-    context.brand_html = "ERPNext Template"
+    context.brand_html = "Recod Frappe DevTools"
     context.source_link = source_link
     context.docs_base_url = docs_base_url
     context.headline = headline

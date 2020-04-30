@@ -1,6 +1,6 @@
-# **ERPNext Template** User Guide
+# **Recod Frappe DevTools** User Guide
 
-This is the User Guide for **ERPNext Template**.
+This is the User Guide for **Recod Frappe DevTools**.
 
 ## Summary
 
