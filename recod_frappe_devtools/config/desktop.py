@@ -14,7 +14,7 @@ def get_data():
         {
             "module_name": "Recod Frappe DevTools",
             "color": "grey",
-            "icon": "octicon octicon-file-directory",
+            "icon": "octicon octicon-beaker",
             "type": "module",
             "label": _("Recod Frappe DevTools")
         }
