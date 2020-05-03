@@ -15,7 +15,7 @@ before_install:
   - export TAG=travis
   - export VCS_REF=`git rev-parse --short HEAD`
   - export BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  - export IMAGE_NAME=docker-erpnext-template
+  - export IMAGE_NAME=docker-recod-frappe-devtools
   - export home=$(pwd)
   - export travis_dir="${home}/.travis"
   - export BUILD_BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-${TRAVIS_BRANCH}}
