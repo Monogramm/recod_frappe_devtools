@@ -2,7 +2,9 @@ from __future__ import unicode_literals, absolute_import
 import click
 import os, shutil
 import frappe
+import plantuml as plantuml
 from frappe.commands import pass_context
+from recod_frappe_devtools.commands.plant_uml_commands import build_uml
 
 
 @click.command('build-app-docs')
@@ -56,6 +58,15 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
         frappe.destroy()
 
 
+@click.command('build-app-uml')
+@pass_context
+@click.argument('app')
+@click.argument('path')
+def build_app_uml(context, app, path):
+    build_uml()
+
+
+
 commands = [
-    build_app_docs,
+    build_app_docs, build_app_uml
 ]
