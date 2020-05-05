@@ -4,7 +4,7 @@ import os, shutil
 import frappe
 import plantuml as plantuml
 from frappe.commands import pass_context
-from recod_frappe_devtools.commands.plant_uml_commands import build_uml
+from recod_frappe_devtools.commands.plant_uml_commands import create_file_from_plant_uml_file
 
 
 @click.command('build-app-docs')
@@ -63,7 +63,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @click.argument('app')
 @click.argument('path')
 def build_app_uml(context, app, path):
-    build_uml()
+    create_file_from_plant_uml_file(os.path.dirname(__file__) + "/test_file.txt")
 
 
 
