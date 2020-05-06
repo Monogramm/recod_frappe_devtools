@@ -2,7 +2,6 @@ from __future__ import unicode_literals, absolute_import
 import click
 import os, shutil
 import frappe
-import plantuml as plantuml
 from frappe.commands import pass_context
 from recod_frappe_devtools.commands.plant_uml_commands import create_file_from_plant_uml_file
 
@@ -17,7 +16,7 @@ from recod_frappe_devtools.commands.plant_uml_commands import create_file_from_p
 def build_app_docs(context, app, docs_version="current", target=None, local=False, watch=False):
     "Setup docs in target folder of target app"
     from frappe.utils import watch as start_watch
-    from frappe.utils.setup_docs import add_breadcrumbs_tag
+    from recod_frappe_devtools.build_docs.setup_docs import add_breadcrumbs_tag
 
     for site in context.sites:
         _build_docs_once(site, app, docs_version, target, local)
@@ -41,16 +40,16 @@ def build_app_docs(context, app, docs_version="current", target=None, local=Fals
 
 
 def _build_docs_once(site, app, docs_version, target, local, only_content_updated=False):
-    from frappe.utils.setup_docs import setup_docs
-
+    from recod_frappe_devtools.build_docs.setup_docs import SetupDocs
     try:
 
         frappe.init(site=site)
         frappe.connect()
-        make = setup_docs(app, target)
+        make = SetupDocs(app, target)
 
         if not only_content_updated:
             make.build(docs_version)
+            make.add_sidebars()
 
     # make.make_docs(target, local)
 
