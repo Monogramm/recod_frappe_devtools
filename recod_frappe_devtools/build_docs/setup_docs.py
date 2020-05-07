@@ -8,7 +8,18 @@ Call from command line:
 from __future__ import unicode_literals, print_function
 
 import os, json, frappe, shutil
+
+import jinja2
 from frappe.utils import markdown
+
+
+# def is_singe_doc(basepath, doctype):
+#     if "__" not in doctype:
+#         with open(basepath + "/" + doctype + ".json", 'r') as f:
+#             data_str = f.read()
+#             data = json.loads(data_str)
+#             return data['issingle'] == 1
+#     return True
 
 
 class SetupDocs(object):
@@ -46,7 +57,6 @@ class SetupDocs(object):
             "get_doctype_app": frappe.get_doctype_app
         }
 
-
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
         self.docs_path = frappe.get_app_path(self.target_app, 'www', "docs")
@@ -82,7 +92,10 @@ class SetupDocs(object):
                 module, doctype = parts[-3], parts[-1]
 
                 if doctype != "boilerplate":
-                    self.write_model_file(basepath, module, doctype)
+                    try:
+                        self.write_model_file(basepath, module, doctype)
+                    except jinja2.exceptions.SecurityError:
+                        continue
 
             # standard python module
             if self.is_py_module(basepath, folders, files):
@@ -106,10 +119,10 @@ class SetupDocs(object):
             with open(os.path.join(basepath, '_sidebar.json'), 'w') as sidebarfile:
                 sidebarfile.write(frappe.as_json([
                     {"title": "Search Docs ...", "type": "input", "route": "/search_docs"},
-                    {"title": "Docs Home", "route": "{}/docs".format(self.app)},
-                    {"title": "User Guide", "route": "{}/docs/user".format(self.app)},
-                    {"title": "Server API", "route": "{}/docs/current/api".format(self.app)},
-                    {"title": "Models (Reference)", "route": "{}/docs/current/models".format(self.app)},
+                    {"title": "Docs Home", "route": "/docs"},
+                    {"title": "User Guide", "route": "/docs/user"},
+                    {"title": "Server API", "route": "/docs/current/api"},
+                    {"title": "Models (Reference)", "route": "/docs/current/models"},
                     {"title": "Improve Docs", "route":
                         "{0}/tree/develop/{1}/docs".format(self.docs_config.source_link, self.app)}
                 ]))
