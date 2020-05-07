@@ -92,10 +92,7 @@ class SetupDocs(object):
                 module, doctype = parts[-3], parts[-1]
 
                 if doctype != "boilerplate":
-                    try:
-                        self.write_model_file(basepath, module, doctype)
-                    except jinja2.exceptions.SecurityError:
-                        continue
+                    self.write_model_file(basepath, module, doctype)
 
             # standard python module
             if self.is_py_module(basepath, folders, files):
