@@ -75,8 +75,6 @@ class SetupDocs(object):
                     + '\n# License \n Generated Copyright © 2020 [Monogramm](https://www.monogramm.io)'
                       ' \n This project {} licensed.'''.format(
                 self.hooks.get('app_license')[0]))
-        shutil.copy(os.path.join(self.docs_path, "_sidebar.json"),os.path.join(self.docs_path, ".."))
-        
 
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
@@ -124,6 +122,7 @@ class SetupDocs(object):
         # self.build_user_docs()
         self.copy_user_assets()
         self.add_sidebars()
+        shutil.copy(os.path.join(self.docs_path, "_sidebar.json"), os.path.join(self.docs_path, ".."))
         self.add_breadcrumbs_for_user_pages()
 
     def add_breadcrumbs_for_user_pages(self):
