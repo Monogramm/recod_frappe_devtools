@@ -57,9 +57,28 @@ class SetupDocs(object):
             "get_doctype_app": frappe.get_doctype_app
         }
 
+    def get_raw_for_md_file(self, app_title, app_name):
+        if app_name not in ("frappe", "erpnext"):
+            return "- [{}]({})\n".format(app_title, "/docs/" + app_name)
+
+    def create_general_doc(self, path_folder):
+        hooks = frappe.get_hooks()
+        list_with_titles = hooks.get("app_title")
+        list_with_apps = hooks.get("app_name")
+        raws = list(map(self.get_raw_for_md_file, list_with_titles, list_with_apps))
+        raws = [raw for raw in raws if raw]  # Remove all None from list
+        str_raws = ''
+        for raw in raws:
+            str_raws += raw
+        with open(path_folder + '/' + 'index.md', 'w') as f:
+            f.write('''# Documentation site \nYour instance documentation: \n\n''' + str(str_raws)
+                    + '\n# License \n Generated Copyright © 2020 [Monogramm](https://www.monogramm.io)'
+                      ' \n This project {} licensed.'''.format(
+                self.hooks.get('app_license')[0]))
+
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
-        self.docs_path = frappe.get_app_path(self.target_app, 'www', "docs")
+        self.docs_path = frappe.get_app_path(self.target_app, 'www', "docs", self.target_app)
         self.path = os.path.join(self.docs_path, docs_version)
         self.app_context["app"]["docs_version"] = docs_version
 
@@ -71,6 +90,8 @@ class SetupDocs(object):
         os.makedirs(self.path)
 
         self.make_home_pages()
+
+        self.create_general_doc(frappe.get_app_path(self.target_app, 'www', 'docs'))
 
         for basepath, folders, files in os.walk(self.app_path):
 
@@ -116,11 +137,14 @@ class SetupDocs(object):
             with open(os.path.join(basepath, '_sidebar.json'), 'w') as sidebarfile:
                 sidebarfile.write(frappe.as_json([
                     {"title": "Search Docs ...", "type": "input", "route": "/search_docs"},
-                    {"title": "Docs Home", "route": "/docs"},
-                    {"title": "User Guide", "route": "/docs/user"},
-                    {"title": "Server API", "route": "/docs/current/api"},
-                    {"title": "Models (Reference)", "route": "/docs/current/models"},
-                    {"title": "Improve Docs", "route":
+                    {"title": "Docs Home", "route": "/docs/{}".format(self.target_app)},
+                    {"title": "{} - User Guide".format(self.app_context['app'].get("title")),
+                     "route": "/docs/{}/user".format(self.target_app)},
+                    {"title": "{} - Server API".format(self.app_context['app'].get("title")),
+                     "route": "/docs/{}/current/api".format(self.target_app)},
+                    {"title": "{} - Models (Reference)".format(self.app_context['app'].get("title")),
+                     "route": "/docs/{}/current/models".format(self.target_app)},
+                    {"title": "{} - Improve Docs".format(self.app_context['app'].get("title")), "route":
                         "{0}/tree/develop/{1}/docs".format(self.docs_config.source_link, self.app)}
                 ]))
 
@@ -134,11 +158,11 @@ class SetupDocs(object):
         shutil.copytree(os.path.join(self.app_path, 'docs', 'user'),
                         os.path.join(self.docs_path, 'user'))
         shutil.copytree(os.path.join(self.app_path, 'docs', 'assets'),
-                        frappe.get_app_path(self.target_app, 'www', 'docs', 'assets'))
+                        frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app, 'assets'))
 
         # copy index
         shutil.copy(os.path.join(self.app_path, 'docs', 'index.md'),
-                    frappe.get_app_path(self.target_app, 'www', 'docs'))
+                    frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
 
     def make_home_pages(self):
         """Make standard home pages for docs, developer docs, api and models
