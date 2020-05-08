@@ -30,6 +30,7 @@ class SetupDocs(object):
 
         frappe.flags.web_pages_folders = ['docs', ]
         frappe.flags.web_pages_apps = [self.app, ]
+        self.list_without_app_documentation = ['frappe', 'erpnext']
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
@@ -58,7 +59,9 @@ class SetupDocs(object):
         }
 
     def get_raw_for_md_file(self, app_title, app_name):
-        if app_name not in ("frappe", "erpnext"):
+        if not os.path.exists(frappe.get_app_path(app_name, 'www')):
+            self.list_without_app_documentation.append(app_name)
+        if app_name not in self.list_without_app_documentation:
             return "- [{}]({})\n".format(app_title, "/docs/" + app_name)
 
     def create_general_doc(self, path_folder):
