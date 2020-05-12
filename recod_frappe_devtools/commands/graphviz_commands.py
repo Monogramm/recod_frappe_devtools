@@ -11,7 +11,9 @@ def create_dot(json_dump, dot):
     label = json_dump['name'] + "|"
     links = []
     for field in json_dump['fields']:
-        label += "{}:{}\l".format(field['fieldtype'], field['fieldname'])
+        if field['fieldtype'] not in ("Section Break"):
+            label += "{}: {} {}\l".format(field['fieldtype'], field['fieldname'],
+                                          "({})".format(field.get('options')) if field.get('options') else "")
         if field['fieldtype'] == 'Link':
             links.append({'head': json_dump['name'], 'end': field['options']})
     label = "{" + label + "}"
