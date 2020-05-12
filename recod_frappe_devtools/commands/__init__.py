@@ -50,8 +50,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
         if not only_content_updated:
             make.build(docs_version)
             make.add_sidebars()
-
-    # make.make_docs(target, local)
+            add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", 'generated_uml'))
 
     finally:
         frappe.destroy()
@@ -62,8 +61,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @click.argument('app')
 @click.argument('path')
 def build_app_uml(context, app, path):
-    print(path)
-    add_uml(app)
+    add_uml(app, path)
 
 
 

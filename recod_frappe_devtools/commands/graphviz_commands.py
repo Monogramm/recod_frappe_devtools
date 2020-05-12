@@ -23,8 +23,7 @@ def create_dot(json_dump, dot):
     return dot
 
 
-def add_uml(app_name,
-            path='/home/emil/Desktop/frappe-bench/apps/recod_frappe_devtools/recod_frappe_devtools/commands/file.gv'):
+def add_uml(app_name, path):
     list_with_json_files = get_all_json_files_from_app(app_name)
     dot = Digraph(comment='Doctype UML')
     for file in list_with_json_files:
