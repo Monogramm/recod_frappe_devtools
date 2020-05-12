@@ -71,13 +71,16 @@ class SetupDocs(object):
         raws = list(map(self.get_raw_for_md_file, list_with_titles, list_with_apps))
         raws = [raw for raw in raws if raw]  # Remove all None from list
         str_raws = ''
+        list_sidebar = []
         for raw in raws:
             str_raws += raw
-        with open(path_folder + '/' + 'index.md', 'w') as f:
-            f.write('''# Documentation site \nYour instance documentation: \n\n''' + str(str_raws)
-                    + '\n# License \n Generated Copyright © 2020 [Monogramm](https://www.monogramm.io)'
-                      ' \n This project {} licensed.'''.format(
-                self.hooks.get('app_license')[0]))
+        with open(os.path.join(path_folder, 'index.md'), 'w') as f:
+            f.write('''# Documentation site \nYour instance documentation: \n\n''' + str(str_raws))
+        for app, title in zip(list_with_apps, list_with_titles):
+            if app not in self.list_without_app_documentation:
+                list_sidebar.append({'route': '/docs/{}'.format(app), 'title': title})
+        with open(os.path.join(path_folder, '_sidebar.json'), 'w') as f:
+            f.write(json.dumps(list_sidebar))
 
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
@@ -125,7 +128,6 @@ class SetupDocs(object):
         # self.build_user_docs()
         self.copy_user_assets()
         self.add_sidebars()
-        shutil.copy(os.path.join(self.docs_path, "_sidebar.json"), os.path.join(self.docs_path, ".."))
         self.add_breadcrumbs_for_user_pages()
 
     def add_breadcrumbs_for_user_pages(self):
