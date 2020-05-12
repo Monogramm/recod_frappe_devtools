@@ -1,0 +1,2 @@
+recod_frappe_devtools.__init__
+recod_frappe_devtools.hooks

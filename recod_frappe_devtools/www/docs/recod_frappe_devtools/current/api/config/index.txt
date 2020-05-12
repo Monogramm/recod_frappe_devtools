@@ -1,0 +1,3 @@
+recod_frappe_devtools.config.docs
+recod_frappe_devtools.config.desktop
+recod_frappe_devtools.config
