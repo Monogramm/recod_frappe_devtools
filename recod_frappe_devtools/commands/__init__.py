@@ -62,7 +62,8 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @click.argument('app')
 @click.argument('path')
 def build_app_uml(context, app, path):
-    add_uml(app, path)
+    print(path)
+    add_uml(app)
 
 
 

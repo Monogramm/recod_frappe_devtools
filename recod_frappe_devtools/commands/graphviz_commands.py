@@ -7,15 +7,29 @@ import frappe
 from graphviz import Digraph
 
 
-def add_uml(app_name, path = '/home/emil/Desktop/frappe-bench/apps/recod_frappe_devtools/recod_frappe_devtools/commands/file.gv'):
+def create_dot(json_dump, dot):
+    label = json_dump['name'] + "|"
+    links = []
+    for field in json_dump['fields']:
+        label += "{}:{}\l".format(field['fieldtype'], field['fieldname'])
+        if field['fieldtype'] == 'Link':
+            links.append({'head': json_dump['name'], 'end': field['options']})
+    label = "{" + label + "}"
+    dot.node(json_dump['name'], label, shape="record")
+    for link in links:
+        dot.edge(link['head'], link['end'])
+    return dot
+
+
+def add_uml(app_name,
+            path='/home/emil/Desktop/frappe-bench/apps/recod_frappe_devtools/recod_frappe_devtools/commands/file.gv'):
     list_with_json_files = get_all_json_files_from_app(app_name)
     dot = Digraph(comment='Doctype UML')
     for file in list_with_json_files:
         with open(file, "r") as file:
             json_dump = json.loads(file.read())
-            dot.node(json_dump['name'], json_dump['name'])
+            dot = create_dot(json_dump, dot)
     dot.render(path, view=True)
-
 
 
 def get_all_json_files_from_app(app_name):
