@@ -27,12 +27,12 @@ def create_dot(json_dump, dot):
 
 def add_uml(app_name, path):
     list_with_json_files = get_all_json_files_from_app(app_name)
-    dot = Digraph(comment='Doctype UML')
+    dot = Digraph(comment="Doctype UML")
     for file in list_with_json_files:
         with open(file, "r") as file:
             json_dump = json.loads(file.read())
             dot = create_dot(json_dump, dot)
-    dot.render(path)
+    dot.render(path, format="png")
 
 
 def get_all_json_files_from_app(app_name):

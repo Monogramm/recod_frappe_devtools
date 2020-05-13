@@ -46,11 +46,13 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
         frappe.init(site=site)
         frappe.connect()
         make = SetupDocs(app, target)
-
         if not only_content_updated:
             make.build(docs_version)
             make.add_sidebars()
-            add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", 'generated_uml'))
+            # Add documentation
+            add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", app + "_uml"))
+            make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app))
+            make.update_sidebars_in_all_apps()
 
     finally:
         frappe.destroy()

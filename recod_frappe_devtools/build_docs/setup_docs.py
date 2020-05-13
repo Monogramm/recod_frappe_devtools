@@ -25,6 +25,7 @@ from frappe.utils import markdown
 class SetupDocs(object):
     def __init__(self, app, target_app):
 
+        self.list_sidebar = []
         self.app = app
         self.target_app = target_app
 
@@ -71,16 +72,21 @@ class SetupDocs(object):
         raws = list(map(self.get_raw_for_md_file, list_with_titles, list_with_apps))
         raws = [raw for raw in raws if raw]  # Remove all None from list
         str_raws = ''
-        list_sidebar = []
         for raw in raws:
             str_raws += raw
+        general_doc_raw = None
+        with open(frappe.get_app_path("recod_frappe_devtools", "..", "docs", "general_template_example.md"),
+                  "r") as file:
+            general_doc_raw = file.read()
         with open(os.path.join(path_folder, 'index.md'), 'w') as f:
-            f.write('''# Documentation site \nYour instance documentation: \n\n''' + str(str_raws))
+            f.write(general_doc_raw.format(str_raws))
         for app, title in zip(list_with_apps, list_with_titles):
             if app not in self.list_without_app_documentation:
-                list_sidebar.append({'route': '/docs/{}'.format(app), 'title': title})
-        with open(os.path.join(path_folder, '_sidebar.json'), 'w') as f:
-            f.write(json.dumps(list_sidebar))
+                self.list_sidebar.append({'route': '/docs/{}'.format(app), 'title': title})
+        for app in list_with_apps:
+            if app not in self.list_without_app_documentation:
+                with open(frappe.get_app_path(app, 'www', 'docs', "_sidebar.json"), 'w') as f:
+                    f.write(json.dumps(self.list_sidebar))
 
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
@@ -319,8 +325,20 @@ class SetupDocs(object):
                 with open(model_path, "wb") as f:
                     context = {"doctype": doctype_real_name}
                     context.update(self.app_context)
-                    f.write(frappe.render_template("templates/autodoc/doctype.html",
-                                                   context).encode("utf-8"))
+
+    def add_uml_in_doc(self, path):
+        with open(os.path.join(path, "user", "index.md"), "a+") as file:
+            # [![UML](./assets/erpnext_poc_homecoming_uml.png)](./assets/erpnext_poc_homecoming_uml.png)
+            file.write(
+                '''## UML Class diagramm \n ![UML]({} "UML")'''.format(
+                    os.path.join("./assets", self.app + "_uml.png")))
+
+    def update_sidebars_in_all_apps(self):
+        list_apps = frappe.get_all_apps()
+        for app in list_apps:
+            if app not in self.list_without_app_documentation:
+                with open(frappe.get_app_path(app, "www", "docs", "_sidebar.json"), "w") as file:
+                    file.write(json.dumps(self.list_sidebar))
 
 
 def get_version(app="frappe"):
