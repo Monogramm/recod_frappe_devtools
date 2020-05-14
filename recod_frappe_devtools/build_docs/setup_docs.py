@@ -153,7 +153,7 @@ class SetupDocs(object):
                     {"title": "{} - User Guide".format(self.app_context['app'].get("title")),
                      "route": "/docs/{}/user".format(self.target_app)},
                     {"title": "{} - Server API".format(self.app_context['app'].get("title")),
-                     "route": "/docs/{}/current/api".format(self.target_app)},
+                     "route": "/docs/{0}/{1}/api".format(self.target_app, self.app_context["app"].get("docs_version"))},
                     {"title": "{} - Models (Reference)".format(self.app_context['app'].get("title")),
                      "route": "/docs/{}/current/models".format(self.target_app)},
                     {"title": "{} - Improve Docs".format(self.app_context['app'].get("title")), "route":
