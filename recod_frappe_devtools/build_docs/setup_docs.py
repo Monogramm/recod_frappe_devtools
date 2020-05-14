@@ -31,7 +31,7 @@ class SetupDocs(object):
 
         frappe.flags.web_pages_folders = ['docs', ]
         frappe.flags.web_pages_apps = [self.app, ]
-        self.list_without_app_documentation = ['frappe', 'erpnext']
+        self.list_without_app_documentation = []
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
