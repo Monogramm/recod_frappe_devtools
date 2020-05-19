@@ -31,7 +31,7 @@ class SetupDocs(object):
 
         frappe.flags.web_pages_folders = ['docs', ]
         frappe.flags.web_pages_apps = [self.app, ]
-        self.list_without_app_documentation = []
+        self.list_without_app_documentation = ['frappe', 'erpnext']
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
@@ -68,7 +68,7 @@ class SetupDocs(object):
     def create_general_doc(self, path_folder):
         hooks = frappe.get_hooks()
         list_with_titles = hooks.get("app_title")
-        list_with_apps = hooks.get("app_name")
+        list_with_apps = frappe.get_installed_apps()
         raws = list(map(self.get_raw_for_md_file, list_with_titles, list_with_apps))
         raws = [raw for raw in raws if raw]  # Remove all None from list
         str_raws = ''
@@ -155,7 +155,8 @@ class SetupDocs(object):
                     {"title": "{} - Server API".format(self.app_context['app'].get("title")),
                      "route": "/docs/{0}/{1}/api".format(self.target_app, self.app_context["app"].get("docs_version"))},
                     {"title": "{} - Models (Reference)".format(self.app_context['app'].get("title")),
-                     "route": "/docs/{}/current/models".format(self.target_app)},
+                     "route": "/docs/{0}/{1}/models".format(self.target_app,
+                                                            self.app_context["app"].get("docs_version"))},
                     {"title": "{} - Improve Docs".format(self.app_context['app'].get("title")), "route":
                         "{0}/tree/develop/{1}/docs".format(self.docs_config.source_link, self.app)}
                 ]))
@@ -326,15 +327,15 @@ class SetupDocs(object):
                     context = {"doctype": doctype_real_name}
                     context.update(self.app_context)
 
-    def add_uml_in_doc(self, path):
-        with open(os.path.join(path, "user", "index.md"), "a+") as file:
-            # [![UML](./assets/erpnext_poc_homecoming_uml.png)](./assets/erpnext_poc_homecoming_uml.png)
+    def add_uml_in_doc(self, path, extension):
+        with open(os.path.join(path, "current", "models", "index.html"),
+                  "a+") as file:
             file.write(
-                '''## UML Class diagramm \n ![UML]({} "UML")'''.format(
-                    os.path.join("./assets", self.app + "_uml.png")))
+                '''<h3>Class diagramm</h3> \n <a href="{0}"><img src="{0}"></a>'''.format(
+                    os.path.join("../assets", self.app + "_uml." + extension)))
 
     def update_sidebars_in_all_apps(self):
-        list_apps = frappe.get_all_apps()
+        list_apps = frappe.get_installed_apps()
         for app in list_apps:
             if app not in self.list_without_app_documentation:
                 with open(frappe.get_app_path(app, "www", "docs", "_sidebar.json"), "w") as file:

@@ -3,10 +3,10 @@ import click
 import os, shutil
 import frappe
 from frappe.commands import pass_context
-from recod_frappe_devtools.commands.graphviz_commands import add_uml
+from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_all_json_files_from_app
 
 
-@click.command('build-app-docs')
+@click.command('build-app-docs', help="Setup docs in target folder of target app")
 @pass_context
 @click.argument('app')
 @click.option('--docs-version', default='current')
@@ -50,23 +50,30 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
             make.build(docs_version)
             make.add_sidebars()
             # Add documentation
-            add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", app + "_uml"))
-            make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app))
+            if get_all_json_files_from_app(app, [app]):
+                add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", app + "_uml"))
+                make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app), "png")
+            else:
+                print("UML diagram has not been generated")
             make.update_sidebars_in_all_apps()
 
     finally:
         frappe.destroy()
 
 
-@click.command('build-app-uml')
+@click.command('build-app-uml', help="Build uml for application")
 @pass_context
 @click.argument('app')
 @click.argument('path')
-def build_app_uml(context, app, path):
+@click.option('--modules')
+@click.option('--doctype', help='generate uml for definetely doctype')
+def build_app_uml(context, app, path, modules, doctype=None):
     "Generate UML diagram of target app"
-    add_uml(app, path)
-
-
+    modules_list = []
+    if modules:
+        modules_list = modules.split(',')
+    extension = path.split('.')[1]
+    add_uml(app, path, extension, modules_list, doctype)
 
 commands = [
     build_app_docs, build_app_uml
