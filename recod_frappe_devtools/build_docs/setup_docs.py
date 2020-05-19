@@ -334,7 +334,7 @@ class SetupDocs(object):
             scrub_doc_name = frappe.scrub(doctype['name'])
             # Path to doctype image file in assets
             doc_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
-                                           self.app + "{}_uml.{}").format(
+                                           self.app + "_{}_uml.{}").format(
                 scrub_doc_name, extension)
 
             add_uml(self.app, doc_path, doctype=doctype['name'])
