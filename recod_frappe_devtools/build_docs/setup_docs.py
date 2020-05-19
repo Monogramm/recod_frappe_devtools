@@ -31,11 +31,13 @@ class SetupDocs(object):
 
         frappe.flags.web_pages_folders = ['docs', ]
         frappe.flags.web_pages_apps = [self.app, ]
-        self.list_without_app_documentation = ['frappe', 'erpnext']
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
         self.setup_app_context()
+
+        with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'r') as f:
+            self.list_with_app_docs = f.read().split('\n')
 
     def setup_app_context(self):
         self.docs_config = frappe.get_module(self.app + ".config.docs")
@@ -60,9 +62,8 @@ class SetupDocs(object):
         }
 
     def get_raw_for_md_file(self, app_title, app_name):
-        if not os.path.exists(frappe.get_app_path(app_name, 'www')):
-            self.list_without_app_documentation.append(app_name)
-        if app_name not in self.list_without_app_documentation:
+
+        if app_name in self.list_with_app_docs:
             return "- [{}]({})\n".format(app_title, "/docs/" + app_name)
 
     def create_general_doc(self, path_folder):
@@ -75,21 +76,28 @@ class SetupDocs(object):
         for raw in raws:
             str_raws += raw
         general_doc_raw = None
-        with open(frappe.get_app_path("recod_frappe_devtools", "..", "docs", "general_template_example.md"),
+        # self.make_folder("erpnext_poc_homecoming",
+        #                  template="templates/autodoc/docs_home.html",
+        #                  context={"list_with_apps": raws})
+        with open(frappe.get_app_path("recod_frappe_devtools", "templates", "autodoc", "docs_home.md"),
                   "r") as file:
             general_doc_raw = file.read()
         with open(os.path.join(path_folder, 'index.md'), 'w') as f:
             f.write(general_doc_raw.format(str_raws))
         for app, title in zip(list_with_apps, list_with_titles):
-            if app not in self.list_without_app_documentation:
+            if app in self.list_with_app_docs:
                 self.list_sidebar.append({'route': '/docs/{}'.format(app), 'title': title})
         for app in list_with_apps:
-            if app not in self.list_without_app_documentation:
+            if app in self.list_with_app_docs:
                 with open(frappe.get_app_path(app, 'www', 'docs', "_sidebar.json"), 'w') as f:
                     f.write(json.dumps(self.list_sidebar))
 
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
+        with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'a+') as f:
+            if self.app not in self.list_with_app_docs:
+                f.write(self.app + '\n')
+
         self.docs_path = frappe.get_app_path(self.target_app, 'www', "docs", self.target_app)
         self.path = os.path.join(self.docs_path, docs_version)
         self.app_context["app"]["docs_version"] = docs_version
@@ -337,7 +345,7 @@ class SetupDocs(object):
     def update_sidebars_in_all_apps(self):
         list_apps = frappe.get_installed_apps()
         for app in list_apps:
-            if app not in self.list_without_app_documentation:
+            if app in self.list_with_app_docs:
                 with open(frappe.get_app_path(app, "www", "docs", "_sidebar.json"), "w") as file:
                     file.write(json.dumps(self.list_sidebar))
 
