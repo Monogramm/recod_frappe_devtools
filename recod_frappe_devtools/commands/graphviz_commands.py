@@ -25,7 +25,7 @@ def create_dot(json_dump, dot):
         options = field.get('options') if field.get('options') else ""
         if field['fieldtype'] == 'Select':
             options = options.replace('\n', ", ")
-        if field['fieldtype'] not in ("Section Break", "HTML"):
+        if field['fieldtype'] not in ("HTML"):
             label += "+ {}: {} {}\l".format(field['fieldname'], field['fieldtype'],
                                             "(" + options + ")" if options else "")
         if field['fieldtype'] in ('Link', "Table"):
@@ -50,13 +50,15 @@ def get_all_modules(app_name):
 
 
 def add_uml(app_name, path, extension="png", list_with_modules=None, doctype=None):
+    """Add uml diagramm for app"""
     if list_with_modules is None:
         list_with_modules = []
 
     if not list_with_modules:
         list_with_modules = get_all_modules(app_name)
 
-    list_with_json_files = get_all_json_files_from_app(app_name, list_with_modules)
+    list_with_json_files = get_json_from_app(app_name, list_with_modules)
+
     dot = Digraph(comment="Doctype UML")
     for file in list_with_json_files:
         with open(file, "r") as file:
@@ -68,7 +70,7 @@ def add_uml(app_name, path, extension="png", list_with_modules=None, doctype=Non
     dot.render(path.split('.')[0], format=extension)
 
 
-def get_all_json_files_from_app(app_name, list_with_modules):
+def get_json_from_app(app_name, list_with_modules):
     list_with_json_files = []
     for module in list_with_modules:
         doctype_folder_path = frappe.get_app_path(app_name, module, 'doctype')

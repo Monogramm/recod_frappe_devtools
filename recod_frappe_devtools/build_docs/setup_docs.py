@@ -9,17 +9,8 @@ from __future__ import unicode_literals, print_function
 
 import os, json, frappe, shutil
 
-import jinja2
 from frappe.utils import markdown
-
-
-# def is_singe_doc(basepath, doctype):
-#     if "__" not in doctype:
-#         with open(basepath + "/" + doctype + ".json", 'r') as f:
-#             data_str = f.read()
-#             data = json.loads(data_str)
-#             return data['issingle'] == 1
-#     return True
+from recod_frappe_devtools.commands import add_uml
 
 
 class SetupDocs(object):
@@ -335,9 +326,25 @@ class SetupDocs(object):
                     context = {"doctype": doctype_real_name}
                     context.update(self.app_context)
 
-    def add_uml_in_doc(self, path, extension):
-        with open(os.path.join(path, "current", "models", "index.html"),
-                  "a+") as file:
+    def add_uml_in_doc(self, path, extension, app):
+        # Generate umls for all doctypes
+        doctypes = frappe.get_all("DocType", {'module': 'ERPNext POC Homecoming'})
+        models_app = frappe.get_app_path(self.target_app, 'www', 'docs', app, 'current', 'models', app)
+        for doctype in doctypes:
+            scrub_doc_name = frappe.scrub(doctype['name'])
+            # Path to doctype image file in assets
+            doc_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
+                                           self.app + "{}_uml.{}").format(
+                scrub_doc_name, extension)
+
+            add_uml(self.app, doc_path, doctype=doctype['name'])
+            path_to_html = os.path.join(models_app, '{}.html'.format(scrub_doc_name))
+            with open(path_to_html, 'a+') as f:
+                f.write('''<img src="{}">'''.format(os.path.join("../../../assets", os.path.split(doc_path)[1])))
+        # Generate uml for app
+        path_to_app_uml = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets", self.app + "_uml")
+        add_uml(self.app, path_to_app_uml)
+        with open(os.path.join(path, "current", "models", "index.html"), "a+") as file:
             file.write(
                 '''<h3>Class diagramm</h3> \n <a href="{0}"><img src="{0}"></a>'''.format(
                     os.path.join("../assets", self.app + "_uml." + extension)))

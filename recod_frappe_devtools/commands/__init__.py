@@ -3,7 +3,7 @@ import click
 import os, shutil
 import frappe
 from frappe.commands import pass_context
-from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_all_json_files_from_app
+from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_from_app
 
 
 @click.command('build-app-docs', help="Setup docs in target folder of target app")
@@ -47,12 +47,16 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
         frappe.connect()
         make = SetupDocs(app, target)
         if not only_content_updated:
+
+            # Build docs for current app
             make.build(docs_version)
+            # Add sidebars in folders
             make.add_sidebars()
-            # Add documentation
-            if get_all_json_files_from_app(app, [app]):
-                add_uml(app, frappe.get_app_path(target, 'www', 'docs', app, "assets", app + "_uml"))
-                make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app), "png")
+
+            # Add documentation for application
+            list_with_modules = [app]
+            if get_json_from_app(app, list_with_modules):
+                make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app), "png", app)
             else:
                 print("UML diagram has not been generated")
             make.update_sidebars_in_all_apps()
@@ -68,12 +72,17 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @click.option('--modules')
 @click.option('--doctype', help='generate uml for definetely doctype')
 def build_app_uml(context, app, path, modules, doctype=None):
-    "Generate UML diagram of target app"
+    """Generate UML diagram of target app"""
     modules_list = []
     if modules:
         modules_list = modules.split(',')
+
+    if len(path.split('.')) < 2:
+        print("Incorrect path format")
+        return
     extension = path.split('.')[1]
     add_uml(app, path, extension, modules_list, doctype)
+
 
 commands = [
     build_app_docs, build_app_uml
