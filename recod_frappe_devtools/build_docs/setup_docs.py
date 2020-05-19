@@ -9,7 +9,7 @@ from __future__ import unicode_literals, print_function
 
 import os, json, frappe, shutil
 
-from frappe.utils import markdown
+from frappe.utils import markdown, autodoc
 from recod_frappe_devtools.commands import add_uml
 
 
@@ -109,7 +109,6 @@ class SetupDocs(object):
             # make module home page
             if "/doctype/" not in basepath and "doctype" in folders:
                 module = os.path.basename(basepath)
-
                 module_folder = os.path.join(self.models_base_path, module)
 
                 self.make_folder(module_folder,
@@ -122,7 +121,6 @@ class SetupDocs(object):
                 parts = basepath.split("/")
                 # print parts
                 module, doctype = parts[-3], parts[-1]
-
                 if doctype != "boilerplate":
                     self.write_model_file(basepath, module, doctype)
 
@@ -157,7 +155,9 @@ class SetupDocs(object):
                      "route": "/docs/{0}/{1}/models".format(self.target_app,
                                                             self.app_context["app"].get("docs_version"))},
                     {"title": "{} - Improve Docs".format(self.app_context['app'].get("title")), "route":
-                        "{0}/tree/develop/{1}/docs".format(self.docs_config.source_link, self.app)}
+                        "{0}/tree/{1}/{2}/docs".format(self.docs_config.source_link,
+                                                       self.app_context["app"].get("branch"), self.app)}
+
                 ]))
 
     def copy_user_assets(self):
@@ -313,7 +313,6 @@ class SetupDocs(object):
 
     def write_model_file(self, basepath, module, doctype):
         model_path = os.path.join(self.models_base_path, module, doctype + ".html")
-
         if not os.path.exists(model_path):
             model_json_path = os.path.join(basepath, doctype + ".json")
             if os.path.exists(model_json_path):
@@ -321,14 +320,17 @@ class SetupDocs(object):
                     doctype_real_name = json.loads(j.read()).get("name")
 
                 print("Writing " + model_path)
-
                 with open(model_path, "wb") as f:
-                    context = {"doctype": doctype_real_name}
-                    context.update(self.app_context)
+                    controller = autodoc.get_controller(doctype_real_name)
+                    controller_name = controller.__module__
+                    self.app_context.update({'doctype': frappe.unscrub(doctype)})
+                with open(model_path, 'wb') as f:
+                    f.write(frappe.render_template("templates/autodoc/doctype.html",
+                                                   self.app_context).encode('utf-8'))
 
     def add_uml_in_doc(self, path, extension, app):
         # Generate umls for all doctypes
-        doctypes = frappe.get_all("DocType", {'module': 'ERPNext POC Homecoming'})
+        doctypes = frappe.get_all("DocType", {'module': self.app_context['app'].get('title')})
         models_app = frappe.get_app_path(self.target_app, 'www', 'docs', app, 'current', 'models', app)
         for doctype in doctypes:
             scrub_doc_name = frappe.scrub(doctype['name'])
@@ -340,7 +342,7 @@ class SetupDocs(object):
             add_uml(self.app, doc_path, doctype=doctype['name'])
             path_to_html = os.path.join(models_app, '{}.html'.format(scrub_doc_name))
             with open(path_to_html, 'a+') as f:
-                f.write('''<img src="{}">'''.format(os.path.join("../../../assets", os.path.split(doc_path)[1])))
+                f.write('''<a href="{0}"><img src="{0}"></a>'''.format(os.path.join("../../../assets", os.path.split(doc_path)[1])))
         # Generate uml for app
         path_to_app_uml = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets", self.app + "_uml")
         add_uml(self.app, path_to_app_uml)
