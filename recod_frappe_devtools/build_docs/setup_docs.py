@@ -88,7 +88,7 @@ class SetupDocs(object):
         self.www_docs_path = frappe.get_app_path(target_app, 'www', 'docs')
 
     def create_general_doc(self):
-        """Create docs general home page"""
+        """Create docs general home page."""
 
         self.render_autodoc('docs_home.md', os.path.join(self.www_docs_path, 'index.md'),
                             context={'extension': self.extension})
