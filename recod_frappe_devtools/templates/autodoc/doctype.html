@@ -88,7 +88,7 @@ filters = {"options": doctype, "fieldtype": "Table"}, fields = ["distinct parent
 {% endif %}
 <hr>
 <h3>UML diagramm</h3>
-{% set doctype_path = "../../../assets/" + app["name"] + "_" + scrub(doc.name) + "_uml.png" %}
+{% set doctype_path = "../../../assets/" + app["name"] + "_" + scrub(doc.name) + "_uml" + "." + extension %}
 <a href={{doctype_path}}><img src={{doctype_path}}></a>
 <!-- autodoc -->
 <!-- jinja -->
