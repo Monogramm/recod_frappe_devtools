@@ -7,7 +7,7 @@ import click
 import os, shutil
 import frappe
 from frappe.commands import pass_context
-from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_from_app
+from recod_frappe_devtools.utils.graphviz_commands import add_uml, get_json_from_app
 
 @click.command('build-app-docs', help="Setup docs in target folder of target app")
 @pass_context
@@ -73,7 +73,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @pass_context
 @click.argument('app')
 @click.argument('path')
-@click.option('--modules')
+@click.option('--modules', help='modules that should be generated')
 @click.option('--doctype', help='generate uml for definetely doctype')
 def build_app_uml(context, app, path, modules, doctype=None):
     """Generate UML diagram of target app."""

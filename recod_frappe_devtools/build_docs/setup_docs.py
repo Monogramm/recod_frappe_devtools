@@ -155,7 +155,7 @@ class SetupDocs(object):
 
     def add_breadcrumbs_for_user_pages(self):
         for basepath, folders, files in os.walk(os.path.join(self.docs_path, 'user')): # pylint: disable=unused-variable
-            print('List with folders:' + folders)
+            print('List with folders: ' + str(folders))
             for fname in files:
                 if fname.endswith('.md') or fname.endswith('.html'):
                     add_breadcrumbs_tag(os.path.join(basepath, fname))
