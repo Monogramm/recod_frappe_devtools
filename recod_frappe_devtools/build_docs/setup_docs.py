@@ -7,8 +7,36 @@ from __future__ import unicode_literals, print_function
 
 import os, json, frappe, shutil
 
-from frappe.utils import markdown, autodoc
 from recod_frappe_devtools.commands import add_uml
+
+
+def is_py_module(basepath, folders, files):
+    return "__init__.py" in files \
+           and (not "/doctype" in basepath) \
+           and (not "/patches" in basepath) \
+           and (not "/change_log" in basepath) \
+           and (not "/report" in basepath) \
+           and (not "/page" in basepath) \
+           and (not "/templates" in basepath) \
+           and (not "/tests" in basepath) \
+           and (not "/docs" in basepath)
+
+
+def update_index_txt(path):
+    index_txt_path = os.path.join(path, "index.txt")
+    pages = filter(lambda d: ((d.endswith(".html") or d.endswith(".md")) and d not in ("index.html",)) \
+                             or os.path.isdir(os.path.join(path, d)), os.listdir(path))
+    pages = [d.rsplit(".", 1)[0] for d in pages]
+
+    index_parts = []
+    if os.path.exists(index_txt_path):
+        with open(index_txt_path, "r") as f:
+            index_parts = filter(None, f.read().splitlines())
+
+    if not set(pages).issubset(set(index_parts)):
+        print("Updating " + index_txt_path)
+        with open(index_txt_path, "w") as f:
+            f.write("\n".join(pages))
 
 
 class SetupDocs(object):
@@ -101,13 +129,12 @@ class SetupDocs(object):
             if "/doctype/" not in basepath and "doctype" in folders:
                 module = os.path.basename(basepath)
                 module_folder = os.path.join(self.models_base_path, module)
-                print(module)
                 self.make_folder(module_folder,
                                  template="templates/autodoc/module_home.html",
                                  context={"name": module})
                 self.render_autodoc("module_home.html", os.path.join(self.models_base_path, module, 'index.html'),
                                     context={"name": module})
-                self.update_index_txt(module_folder)
+                update_index_txt(module_folder)
 
             # make for model files
             if "/doctype/" in basepath:
@@ -118,7 +145,7 @@ class SetupDocs(object):
                     self.write_model_file(basepath, module, doctype)
 
             # standard python module
-            if self.is_py_module(basepath, folders, files):
+            if is_py_module(basepath, folders, files):
                 self.write_modules(basepath, folders, files)
 
         self.copy_user_assets()
@@ -197,17 +224,6 @@ class SetupDocs(object):
         if not os.path.exists(img_path):
             os.makedirs(img_path)
 
-    def is_py_module(self, basepath, folders, files):
-        return "__init__.py" in files \
-               and (not "/doctype" in basepath) \
-               and (not "/patches" in basepath) \
-               and (not "/change_log" in basepath) \
-               and (not "/report" in basepath) \
-               and (not "/page" in basepath) \
-               and (not "/templates" in basepath) \
-               and (not "/tests" in basepath) \
-               and (not "/docs" in basepath)
-
     def write_modules(self, basepath, folders, files):
         module_folder = os.path.join(self.api_base_path, os.path.relpath(basepath, self.app_path))
         self.make_folder(module_folder)
@@ -234,7 +250,7 @@ class SetupDocs(object):
                     f.write(frappe.render_template("templates/autodoc/pymodule.html",
                                                    context).encode('utf-8'))
 
-        self.update_index_txt(module_folder)
+        update_index_txt(module_folder)
 
     def make_folder(self, path, template=None, context=None):
         if not template:
@@ -261,22 +277,6 @@ class SetupDocs(object):
             with open(index_html_path, "w") as f:
                 f.write(frappe.render_template(template, context))
 
-    def update_index_txt(self, path):
-        index_txt_path = os.path.join(path, "index.txt")
-        pages = filter(lambda d: ((d.endswith(".html") or d.endswith(".md")) and d not in ("index.html",)) \
-                                 or os.path.isdir(os.path.join(path, d)), os.listdir(path))
-        pages = [d.rsplit(".", 1)[0] for d in pages]
-
-        index_parts = []
-        if os.path.exists(index_txt_path):
-            with open(index_txt_path, "r") as f:
-                index_parts = filter(None, f.read().splitlines())
-
-        if not set(pages).issubset(set(index_parts)):
-            print("Updating " + index_txt_path)
-            with open(index_txt_path, "w") as f:
-                f.write("\n".join(pages))
-
     def write_model_file(self, basepath, module, doctype):
         doc_uml_path = self.app + "_{}_uml.{}".format(frappe.scrub(doctype), self.extension)
 
@@ -285,12 +285,10 @@ class SetupDocs(object):
             model_json_path = os.path.join(basepath, doctype + ".json")
             if os.path.exists(model_json_path):
                 print("Writing " + model_path)
-                with open(model_path, "wb") as f:
-                    self.app_context.update({'doctype': frappe.unscrub(doctype)})
-                with open(model_path, 'wb') as f:
-                    context = self.app_context
-                    context.update({'doc_uml_path': doc_uml_path, 'extension': self.extension})
-                    self.render_autodoc('doctype.html', model_path, context)
+                self.app_context.update({'doctype': frappe.unscrub(doctype)})
+                context = self.app_context
+                context.update({'doc_uml_path': doc_uml_path, 'extension': self.extension})
+                self.render_autodoc('doctype.html', model_path, context)
 
     def add_uml_in_doc(self):
         """Generate uml diagrams for doctype, module and application and move content to assets folder."""
