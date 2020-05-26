@@ -193,3 +193,5 @@ typings/
 # Frappe
 public/
 services/
+
+docs/docs_apps.txt
