@@ -1,4 +1,4 @@
-"""Automatically setup docs for a project
+"""Automatically setup docs for a project.
 
 Call from command line:
 	bench build-app-docs app path
