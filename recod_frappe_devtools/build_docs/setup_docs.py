@@ -1,9 +1,7 @@
 """Automatically setup docs for a project
 
 Call from command line:
-
-	bench setup-docs app path
-
+	bench build-app-docs app path
 """
 from __future__ import unicode_literals, print_function
 
@@ -14,7 +12,8 @@ from recod_frappe_devtools.commands import add_uml
 
 
 class SetupDocs(object):
-    def __init__(self, app, target_app):
+    def __init__(self, app, target_app, extension):
+        self.extension = extension
 
         self.list_sidebar = []
         self.app = app
@@ -25,14 +24,18 @@ class SetupDocs(object):
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
-        self.setup_app_context()
 
         with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'r') as f:
             self.list_with_app_docs = f.read().split('\n')
 
-    def setup_app_context(self):
         self.docs_config = frappe.get_module(self.app + ".config.docs")
         version = get_version(app=self.app)
+        self.app_list = []
+        for app in self.list_with_app_docs:
+            if app:
+                self.app_list.append(
+                    {'app_name': app, 'app_title': frappe.get_hooks(app_name=app)['app_title'][0]})
+
         self.app_context = {
             "app": frappe._dict({
                 "name": self.app,
@@ -49,39 +52,27 @@ class SetupDocs(object):
             "metatags": {
                 "description": self.hooks.get("app_description")[0],
             },
-            "get_doctype_app": frappe.get_doctype_app
+            "get_doctype_app": frappe.get_doctype_app,
+            'app_list': self.app_list
         }
 
-    def get_raw_for_md_file(self, app_title, app_name):
+        self.autodoc_path = frappe.get_app_path('recod_frappe_devtools', 'templates', 'autodoc')
+        self.www_docs_path = frappe.get_app_path(target_app, 'www', 'docs')
 
-        if app_name in self.list_with_app_docs:
-            return "- [{}]({})\n".format(app_title, "/docs/" + app_name)
+    def create_general_doc(self):
+        """Create docs general home page"""
 
-    def create_general_doc(self, path_folder):
-        hooks = frappe.get_hooks()
-        list_with_titles = hooks.get("app_title")
-        list_with_apps = frappe.get_installed_apps()
-        raws = list(map(self.get_raw_for_md_file, list_with_titles, list_with_apps))
-        raws = [raw for raw in raws if raw]  # Remove all None from list
-        str_raws = ''
-        for raw in raws:
-            str_raws += raw
-        general_doc_raw = None
-        # self.make_folder("erpnext_poc_homecoming",
-        #                  template="templates/autodoc/docs_home.html",
-        #                  context={"list_with_apps": raws})
-        with open(frappe.get_app_path("recod_frappe_devtools", "templates", "autodoc", "docs_home.md"),
-                  "r") as file:
-            general_doc_raw = file.read()
-        with open(os.path.join(path_folder, 'index.md'), 'w') as f:
-            f.write(general_doc_raw.format(str_raws))
-        for app, title in zip(list_with_apps, list_with_titles):
-            if app in self.list_with_app_docs:
-                self.list_sidebar.append({'route': '/docs/{}'.format(app), 'title': title})
-        for app in list_with_apps:
-            if app in self.list_with_app_docs:
-                with open(frappe.get_app_path(app, 'www', 'docs', "_sidebar.json"), 'w') as f:
-                    f.write(json.dumps(self.list_sidebar))
+        self.render_autodoc('docs_home.md', os.path.join(self.www_docs_path, 'index.md'),
+                            context={'extension': self.extension})
+
+        # Build the list of links to apps with docs
+        for app in self.app_list:
+            self.list_sidebar.append({'route': '/docs/{}'.format(app['app_name']), 'title': app['app_title']})
+
+        # Write the sidebar links for docs home
+        for app in self.app_list:
+            with open(frappe.get_app_path(app['app_name'], 'www', 'docs', "_sidebar.json"), 'w') as f:
+                f.write(json.dumps(self.list_sidebar))
 
     def build(self, docs_version):
         """Build templates for docs models and Python API"""
@@ -90,10 +81,10 @@ class SetupDocs(object):
                 f.write(self.app + '\n')
 
         self.docs_path = frappe.get_app_path(self.target_app, 'www', "docs", self.target_app)
+
         self.path = os.path.join(self.docs_path, docs_version)
         self.app_context["app"]["docs_version"] = docs_version
 
-        self.app_title = self.hooks.get("app_title")[0]
         self.app_path = frappe.get_app_path(self.app)
 
         print("Deleting current...")
@@ -102,7 +93,7 @@ class SetupDocs(object):
 
         self.make_home_pages()
 
-        self.create_general_doc(frappe.get_app_path(self.target_app, 'www', 'docs'))
+        self.create_general_doc()
 
         for basepath, folders, files in os.walk(self.app_path):
 
@@ -110,10 +101,12 @@ class SetupDocs(object):
             if "/doctype/" not in basepath and "doctype" in folders:
                 module = os.path.basename(basepath)
                 module_folder = os.path.join(self.models_base_path, module)
-
+                print(module)
                 self.make_folder(module_folder,
                                  template="templates/autodoc/module_home.html",
                                  context={"name": module})
+                self.render_autodoc("module_home.html", os.path.join(self.models_base_path, module, 'index.html'),
+                                    context={"name": module})
                 self.update_index_txt(module_folder)
 
             # make for model files
@@ -177,8 +170,7 @@ class SetupDocs(object):
                     frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
 
     def make_home_pages(self):
-        """Make standard home pages for docs, developer docs, api and models
-			from templates"""
+        """Make standard home pages for docs, developer docs, api and models from templates"""
         # make dev home page
         with open(os.path.join(self.path, "index.html"), "w") as home:
             home.write(frappe.render_template("templates/autodoc/dev_home.html",
@@ -188,6 +180,9 @@ class SetupDocs(object):
         self.models_base_path = os.path.join(self.path, "models")
         self.make_folder(self.models_base_path,
                          template="templates/autodoc/models_home.html")
+
+        self.render_autodoc('models_home.html',
+                            os.path.join(os.path.join(self.www_docs_path, self.app), "current", "models", "index.html"))
 
         self.api_base_path = os.path.join(self.path, "api")
         self.make_folder(self.api_base_path,
@@ -248,25 +243,26 @@ class SetupDocs(object):
         self.make_folder(module_folder)
 
         for f in files:
-            if f.endswith(".py"):
-                full_module_name = os.path.relpath(os.path.join(basepath, f),
-                                                   self.app_path)[:-3].replace("/", ".")
+            if not f.endswith(".py"):
+                continue
+            full_module_name = os.path.relpath(os.path.join(basepath, f),
+                                               self.app_path)[:-3].replace("/", ".")
 
-                module_name = full_module_name.replace(".__init__", "")
+            module_name = full_module_name.replace(".__init__", "")
 
-                module_doc_path = os.path.join(module_folder,
-                                               self.app + "." + module_name + ".html")
+            module_doc_path = os.path.join(module_folder,
+                                           self.app + "." + module_name + ".html")
 
-                self.make_folder(basepath)
+            self.make_folder(basepath)
 
-                if not os.path.exists(module_doc_path):
-                    print("Writing " + module_doc_path)
-                    with open(module_doc_path, "wb") as f:
-                        context = {"name": self.app + "." + module_name}
-                        context.update(self.app_context)
-                        context['full_module_name'] = self.app + '.' + full_module_name
-                        f.write(frappe.render_template("templates/autodoc/pymodule.html",
-                                                       context).encode('utf-8'))
+            if not os.path.exists(module_doc_path):
+                print("Writing " + module_doc_path)
+                with open(module_doc_path, "wb") as f:
+                    context = {"name": self.app + "." + module_name}
+                    context.update(self.app_context)
+                    context['full_module_name'] = self.app + '.' + full_module_name
+                    f.write(frappe.render_template("templates/autodoc/pymodule.html",
+                                                   context).encode('utf-8'))
 
         self.update_index_txt(module_folder)
 
@@ -312,44 +308,44 @@ class SetupDocs(object):
                 f.write("\n".join(pages))
 
     def write_model_file(self, basepath, module, doctype):
+        doc_uml_path = self.app + "_{}_uml.{}".format(frappe.scrub(doctype), self.extension)
+
         model_path = os.path.join(self.models_base_path, module, doctype + ".html")
         if not os.path.exists(model_path):
             model_json_path = os.path.join(basepath, doctype + ".json")
             if os.path.exists(model_json_path):
-                with open(model_json_path, "r") as j:
-                    doctype_real_name = json.loads(j.read()).get("name")
-
                 print("Writing " + model_path)
                 with open(model_path, "wb") as f:
-                    controller = autodoc.get_controller(doctype_real_name)
-                    controller_name = controller.__module__
                     self.app_context.update({'doctype': frappe.unscrub(doctype)})
                 with open(model_path, 'wb') as f:
-                    f.write(frappe.render_template("templates/autodoc/doctype.html",
-                                                   self.app_context).encode('utf-8'))
+                    context = self.app_context
+                    context.update({'doc_uml_path': doc_uml_path, 'extension': self.extension})
+                    self.render_autodoc('doctype.html', model_path, context)
 
-    def add_uml_in_doc(self, path, extension, app):
+    def add_uml_in_doc(self):
+        """Generate uml diagrams for doctype, module and application and move content to assets folder."""
         # Generate umls for all doctypes
         doctypes = frappe.get_all("DocType", {'module': self.app_context['app'].get('title')})
-        models_app = frappe.get_app_path(self.target_app, 'www', 'docs', app, 'current', 'models', app)
         for doctype in doctypes:
             scrub_doc_name = frappe.scrub(doctype['name'])
+
             # Path to doctype image file in assets
             doc_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
                                            self.app + "_{}_uml.{}").format(
-                scrub_doc_name, extension)
+                scrub_doc_name, self.extension)
 
             add_uml(self.app, doc_path, doctype=doctype['name'])
-            path_to_html = os.path.join(models_app, '{}.html'.format(scrub_doc_name))
-            with open(path_to_html, 'a+') as f:
-                f.write('''<a href="{0}"><img src="{0}"></a>'''.format(os.path.join("../../../assets", os.path.split(doc_path)[1])))
+
+        # Generate uml for modules
+        list_with_modules = list(filter(lambda x: os.path.isdir(x), os.listdir(self.models_base_path)))
+        for module in list_with_modules:
+            module_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
+                                              self.app + "module_uml.{}").format(self.extension)
+            add_uml(self.app, module_path, list_with_modules=[module])
+
         # Generate uml for app
         path_to_app_uml = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets", self.app + "_uml")
         add_uml(self.app, path_to_app_uml)
-        with open(os.path.join(path, "current", "models", "index.html"), "a+") as file:
-            file.write(
-                '''<h3>Class diagramm</h3> \n <a href="{0}"><img src="{0}"></a>'''.format(
-                    os.path.join("../assets", self.app + "_uml." + extension)))
 
     def update_sidebars_in_all_apps(self):
         list_apps = frappe.get_installed_apps()
@@ -358,25 +354,23 @@ class SetupDocs(object):
                 with open(frappe.get_app_path(app, "www", "docs", "_sidebar.json"), "w") as file:
                     file.write(json.dumps(self.list_sidebar))
 
+    def render_autodoc(self, template, doc_path, context=None):
+        """ Render doc from templates folder """
+        if context:
+            context.update(self.app_context)
+        else:
+            context = self.app_context
+        with open(os.path.join(self.autodoc_path, template), 'r') as f:
+            content = frappe.render_template(f.read(), context=context)
+        with open(doc_path, 'w') as f:
+            f.write(content)
+
 
 def get_version(app="frappe"):
     try:
         return frappe.get_attr(app + ".__version__")
     except AttributeError:
         return '0.0.1'
-
-
-edit_link = '''
-<div class="page-container">
-	<div class="page-content">
-	<div class="edit-container text-center">
-		<i class="fa fa-smile"></i>
-		<a class="text-muted edit" href="{source_link}/blob/{branch}/{app_name}/{target}">
-			Improve this page
-		</a>
-	</div>
-	</div>
-</div>'''
 
 
 def add_breadcrumbs_tag(path):

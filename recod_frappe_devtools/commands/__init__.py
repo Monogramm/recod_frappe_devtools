@@ -13,13 +13,14 @@ from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_f
 @click.option('--target', default=None)
 @click.option('--local', default=False, is_flag=True, help='Run app locally')
 @click.option('--watch', default=False, is_flag=True, help='Watch for changes and rewrite')
-def build_app_docs(context, app, docs_version="current", target=None, local=False, watch=False):
+@click.option('--extension', default='png', help = 'extension of uml files')
+def build_app_docs(context, app, docs_version="current", target=None, local=False, watch=False ,extension='png'):
     "Setup docs in target folder of target app"
     from frappe.utils import watch as start_watch
     from recod_frappe_devtools.build_docs.setup_docs import add_breadcrumbs_tag
 
     for site in context.sites:
-        _build_docs_once(site, app, docs_version, target, local)
+        _build_docs_once(site, app, docs_version, target, local, extension=extension)
 
         if watch:
             def trigger_make(source_path, event_type):
@@ -39,13 +40,13 @@ def build_app_docs(context, app, docs_version="current", target=None, local=Fals
             start_watch(apps_path, handler=trigger_make)
 
 
-def _build_docs_once(site, app, docs_version, target, local, only_content_updated=False):
+def _build_docs_once(site, app, docs_version, target, local, only_content_updated=False , extension='png'):
     from recod_frappe_devtools.build_docs.setup_docs import SetupDocs
     try:
 
         frappe.init(site=site)
         frappe.connect()
-        make = SetupDocs(app, target)
+        make = SetupDocs(app, target, extension)
         if not only_content_updated:
 
             # Build docs for current app
@@ -56,7 +57,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
             # Add documentation for application
             list_with_modules = [app]
             if get_json_from_app(app, list_with_modules):
-                make.add_uml_in_doc(frappe.get_app_path(target, 'www', 'docs', app), "png", app)
+                make.add_uml_in_doc()
             else:
                 print("UML diagram has not been generated")
             make.update_sidebars_in_all_apps()

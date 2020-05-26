@@ -5,11 +5,12 @@
 
 <h1>Module {{ name }}</h1>
 <div class="dev-header">
-{{ version(app.name) }}
-{{ source_link(app, app.name + "/" + scrub(name), True) }}
+    {{ version(app.name) }}
+    {{ source_link(app, app.name + "/" + scrub(name), True) }}
 </div>
 <h3>DocTypes for {{ name }}</h3>
 
 {index}
-
+{% set module_path_uml = "../../assets/" + app["name"] + "module" + "_uml.png" %}
+<a href={{module_path_uml}}><img src={{module_path_uml}}></a>
 <!-- autodoc -->

@@ -5,8 +5,8 @@
 
 <h1>{{ app.title }}: Models (DocTypes)</h1>
 <div class="dev-header">
-{{ version(app.name) }}
-{{ source_link(app, app.name, True) }}
+    {{ version(app.name) }}
+    {{ source_link(app, app.name, True) }}
 </div>
 
 <p>Browse DocTypes by Module</p>
@@ -14,5 +14,9 @@
 <h3>Contents</h3>
 
 {index}
+<h3>Class diagramm</h3>
+{% set path_to_app_uml = "../assets/" +  app.name + "_uml" + ".png" %}
+<a href={{path_to_app_uml}}><img src={{path_to_app_uml}}></a>
+
 
 <!-- autodoc -->

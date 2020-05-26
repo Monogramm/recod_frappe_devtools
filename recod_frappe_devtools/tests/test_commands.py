@@ -7,13 +7,16 @@ from __future__ import unicode_literals
 import os
 import unittest
 import frappe
+from recod_frappe_devtools.build_docs.setup_docs import SetupDocs
 from recod_frappe_devtools.commands import _build_docs_once
 
 
 class TestCommands(unittest.TestCase):
     def setUp(self):
-        self.context = {'sites': frappe.utils.get_sites(), 'force': False, 'verbose': False, 'profile': False}
-        _build_docs_once(self.context['sites'][0], "recod_frappe_devtools", "current", "recod_frappe_devtools", "local")
+        self.app_name = "recod_frappe_devtools"
+        setup_docs = SetupDocs(self.app_name, self.app_name, 'png')
+        setup_docs.build('current')
+        setup_docs.add_sidebars()
 
     def test_build_app_docs_one_checker(self):
         self.assertTrue(frappe.get_app_path("recod_frappe_devtools", 'www'))
