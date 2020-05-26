@@ -89,7 +89,7 @@ class SetupDocs(object):
         self.www_docs_path = frappe.get_app_path(target_app, 'www', 'docs')
 
     def create_general_doc(self):
-        """Create docs general home page"""
+        """Create docs general home page."""
 
         self.render_autodoc('docs_home.md', os.path.join(self.www_docs_path, 'index.md'),
                             context={'extension': self.extension})
@@ -104,7 +104,7 @@ class SetupDocs(object):
                 f.write(json.dumps(self.list_sidebar))
 
     def build(self, docs_version):
-        """Build templates for docs models and Python API"""
+        """Build templates for docs models and Python API."""
         with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'a+') as f:
             if self.app not in self.list_with_app_docs:
                 f.write(self.app + '\n')
@@ -189,14 +189,25 @@ class SetupDocs(object):
                       ignore_errors=True)
         shutil.rmtree(os.path.join(self.docs_path, 'assets'),
                       ignore_errors=True)
-        shutil.copytree(os.path.join(self.app_path, 'docs', 'user'),
-                        os.path.join(self.docs_path, 'user'))
-        shutil.copytree(os.path.join(self.app_path, 'docs', 'assets'),
-                        frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app, 'assets'))
 
-        # copy index
-        shutil.copy(os.path.join(self.app_path, 'docs', 'index.md'),
-                    frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
+        # copy user guide if exists
+        app_user_docs = os.path.join(self.app_path, 'docs', 'user')
+        if os.path.exists(app_user_docs):
+             shutil.copytree(app_user_docs,
+                os.path.join(self.docs_path, 'user'))
+
+        # copy assets if exists
+        app_assets_docs = os.path.join(self.app_path, 'docs', 'assets')
+        if os.path.exists(app_assets_docs):
+            shutil.copytree(app_assets_docs,
+                frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app, 'assets'))
+
+        # copy index if exists
+        app_index_docs = os.path.join(self.app_path, 'docs', 'index.md')
+        if os.path.exists(app_index_docs):
+            shutil.copy(app_index_docs,
+                frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
+
 
     def make_home_pages(self):
         """Make standard home pages for docs, developer docs, api and models from templates"""
@@ -326,7 +337,7 @@ class SetupDocs(object):
                     file.write(json.dumps(self.list_sidebar))
 
     def render_autodoc(self, template, doc_path, context=None):
-        """ Render doc from templates folder """
+        """Render doc from templates folder."""
         if context:
             context.update(self.app_context)
         else:
