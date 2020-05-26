@@ -166,6 +166,8 @@ class SetupDocs(object):
                 sidebarfile.write(frappe.as_json([
                     {"title": "Search Docs ...", "type": "input", "route": "/search_docs"},
                     {"title": "Docs Home", "route": "/docs"},
+                    {"title": "{} - Docs Home".format(self.app_context['app'].get("title")),
+                     "route": "/docs/{}".format(self.target_app)},
                     {"title": "{} - User Guide".format(self.app_context['app'].get("title")),
                      "route": "/docs/{}/user".format(self.target_app)},
                     {"title": "{} - Server API".format(self.app_context['app'].get("title")),
