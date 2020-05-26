@@ -5,7 +5,6 @@
 from __future__ import unicode_literals
 
 import os
-import shutil
 import unittest
 import frappe
 from recod_frappe_devtools.build_docs.setup_docs import SetupDocs

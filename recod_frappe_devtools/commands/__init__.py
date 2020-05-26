@@ -1,12 +1,13 @@
+"""
+Commands for creating docs in other apps.
+"""
+
 from __future__ import unicode_literals, absolute_import
 import click
 import os, shutil
 import frappe
 from frappe.commands import pass_context
 from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_from_app
-"""
-Commands for creating docs in other apps
-"""
 
 @click.command('build-app-docs', help="Setup docs in target folder of target app")
 @pass_context

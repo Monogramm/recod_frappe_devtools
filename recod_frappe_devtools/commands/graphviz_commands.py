@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2020, Monogramm and Contributors
 # See license.txt
-"""Generate UML diagrams for a project
+"""Generate UML diagrams for a project.
 
 Call from command line:
 
@@ -18,7 +18,7 @@ from graphviz import Digraph
 
 
 def create_dot(json_dump, dot):
-    """Create node for selected doctype"""
+    """Create node for selected doctype."""
     label = json_dump['name'] + "|"
     links = []
     for field in json_dump['fields']:
@@ -50,7 +50,7 @@ def get_all_modules(app_name):
 
 
 def add_uml(app_name, path, extension="png", list_with_modules=None, doctype=None):
-    """Add uml diagramm for app"""
+    """Add uml diagramm for app."""
     if list_with_modules is None:
         list_with_modules = []
 
