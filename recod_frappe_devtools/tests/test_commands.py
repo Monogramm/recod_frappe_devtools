@@ -16,19 +16,19 @@ class TestCommands(unittest.TestCase):
         self.app_name = "recod_frappe_devtools"
         # Test doctype
         self.doctype_path = frappe.get_app_path('recod_frappe_devtools', 'recod_frappe_devtools', 'doctype')
-        if not os.path.isdir(os.path.join(self.doctype_path, 'mail_request')):
-            os.mkdir(os.path.join(self.doctype_path, 'mail_request'))
-            shutil.copyfile(
-                frappe.get_app_path('recod_frappe_devtools', 'tests', 'test_doctype.json'),
-                os.path.join(self.doctype_path, 'mail_request', 'mail_request.json'))
-            self.setup_docs = SetupDocs(self.app_name, self.app_name, 'png')
-            self.setup_docs.build('current')
-            self.setup_docs.add_sidebars()
+        # if not os.path.isdir(os.path.join(self.doctype_path, 'mail_request')):
+        #     os.mkdir(os.path.join(self.doctype_path, 'mail_request'))
+        #     shutil.copyfile(
+        #         frappe.get_app_path('recod_frappe_devtools', 'tests', 'test_doctype.json'),
+        #         os.path.join(self.doctype_path, 'mail_request', 'mail_request.json'))
+        self.setup_docs = SetupDocs(self.app_name, self.app_name, 'png')
+        self.setup_docs.build('current')
+        self.setup_docs.add_sidebars()
 
-    def tearDown(self):
-        if os.path.isdir(os.path.join(self.doctype_path, 'mail_request')):
-            os.remove(os.path.join(self.doctype_path, 'mail_request', 'mail_request.json'))
-            os.removedirs(os.path.join(self.doctype_path, 'mail_request'))
+    # def tearDown(self):
+    #     if os.path.isdir(os.path.join(self.doctype_path, 'mail_request')):
+    #         os.remove(os.path.join(self.doctype_path, 'mail_request', 'mail_request.json'))
+    #         os.removedirs(os.path.join(self.doctype_path, 'mail_request'))
 
     def test_build_app_docs_sidebar_exists(self):
         sidebar_path = frappe.get_app_path("recod_frappe_devtools", 'www', 'docs', '_sidebar.json')

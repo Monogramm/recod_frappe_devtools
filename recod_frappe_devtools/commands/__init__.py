@@ -4,7 +4,9 @@ import os, shutil
 import frappe
 from frappe.commands import pass_context
 from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_from_app
-
+"""
+Commands for creating docs in other apps
+"""
 
 @click.command('build-app-docs', help="Setup docs in target folder of target app")
 @pass_context
@@ -15,7 +17,7 @@ from recod_frappe_devtools.commands.graphviz_commands import add_uml, get_json_f
 @click.option('--watch', default=False, is_flag=True, help='Watch for changes and rewrite')
 @click.option('--extension', default='png', help = 'extension of uml files')
 def build_app_docs(context, app, docs_version="current", target=None, local=False, watch=False ,extension='png'):
-    "Setup docs in target folder of target app"
+    """Setup docs in target folder of target app."""
     from frappe.utils import watch as start_watch
     from recod_frappe_devtools.build_docs.setup_docs import add_breadcrumbs_tag
 
@@ -73,7 +75,7 @@ def _build_docs_once(site, app, docs_version, target, local, only_content_update
 @click.option('--modules')
 @click.option('--doctype', help='generate uml for definetely doctype')
 def build_app_uml(context, app, path, modules, doctype=None):
-    """Generate UML diagram of target app"""
+    """Generate UML diagram of target app."""
     modules_list = []
     if modules:
         modules_list = modules.split(',')
