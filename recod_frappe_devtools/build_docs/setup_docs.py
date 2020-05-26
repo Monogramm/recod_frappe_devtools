@@ -336,7 +336,7 @@ class SetupDocs(object):
                     file.write(json.dumps(self.list_sidebar))
 
     def render_autodoc(self, template, doc_path, context=None):
-        """ Render doc from templates folder """
+        """Render doc from templates folder."""
         if context:
             context.update(self.app_context)
         else:
