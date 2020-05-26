@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 
 import os
+import shutil
 import unittest
 import frappe
 from recod_frappe_devtools.build_docs.setup_docs import SetupDocs
@@ -24,10 +25,9 @@ class TestCommands(unittest.TestCase):
         self.setup_docs.build('current')
         self.setup_docs.add_sidebars()
 
-    # def tearDown(self):
-    #     if os.path.isdir(os.path.join(self.doctype_path, 'mail_request')):
-    #         os.remove(os.path.join(self.doctype_path, 'mail_request', 'mail_request.json'))
-    #         os.removedirs(os.path.join(self.doctype_path, 'mail_request'))
+    def tearDown(self):
+        if os.path.isdir(frappe.get_app_path('recod_frappe_devtools', 'www')):
+            shutil.rmtree(frappe.get_app_path('recod_frappe_devtools', 'www'))
 
     def test_build_app_docs_sidebar_exists(self):
         sidebar_path = frappe.get_app_path("recod_frappe_devtools", 'www', 'docs', '_sidebar.json')

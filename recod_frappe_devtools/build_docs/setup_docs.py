@@ -41,7 +41,6 @@ def update_index_txt(path):
 
 class SetupDocs(object):
     def __init__(self, app, target_app, extension):
-        self.extension = extension
 
         self.list_sidebar = []
         self.app = app
@@ -81,8 +80,10 @@ class SetupDocs(object):
                 "description": self.hooks.get("app_description")[0],
             },
             "get_doctype_app": frappe.get_doctype_app,
-            'app_list': self.app_list
+            'app_list': self.app_list,
+            'extension': extension
         }
+        self.extension = extension
 
         self.autodoc_path = frappe.get_app_path('recod_frappe_devtools', 'templates', 'autodoc')
         self.www_docs_path = frappe.get_app_path(target_app, 'www', 'docs')
@@ -153,7 +154,7 @@ class SetupDocs(object):
         self.add_breadcrumbs_for_user_pages()
 
     def add_breadcrumbs_for_user_pages(self):
-        for basepath, folders, files in os.walk(os.path.join(self.docs_path,
+        for basepath, %r, files in os.walk(os.path.join(self.docs_path,
                                                              'user')):  # pylint: disable=unused-variable
             for fname in files:
                 if fname.endswith('.md') or fname.endswith('.html'):
@@ -305,7 +306,7 @@ class SetupDocs(object):
             add_uml(self.app, doc_path, doctype=doctype['name'])
 
         # Generate uml for modules
-        list_with_modules = list(filter(lambda x: os.path.isdir(x), os.listdir(self.models_base_path)))
+        list_with_modules = [d for d in os.listdir(self.models_base_path) if os.path.isdir(d)]
         for module in list_with_modules:
             module_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
                                               self.app + "module_uml.{}").format(self.extension)
