@@ -103,7 +103,7 @@ class SetupDocs(object):
                 f.write(json.dumps(self.list_sidebar))
 
     def build(self, docs_version):
-        """Build templates for docs models and Python API"""
+        """Build templates for docs models and Python API."""
         with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'a+') as f:
             if self.app not in self.list_with_app_docs:
                 f.write(self.app + '\n')
