@@ -1,2 +1,1 @@
-erpnext_poc_homecoming
 recod_frappe_devtools

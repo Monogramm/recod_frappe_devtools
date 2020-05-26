@@ -121,7 +121,6 @@ class SetupDocs(object):
             if self.is_py_module(basepath, folders, files):
                 self.write_modules(basepath, folders, files)
 
-        # self.build_user_docs()
         self.copy_user_assets()
         self.add_sidebars()
         self.add_breadcrumbs_for_user_pages()
@@ -197,35 +196,6 @@ class SetupDocs(object):
         img_path = os.path.join(self.docs_path, "assets", "img")
         if not os.path.exists(img_path):
             os.makedirs(img_path)
-
-    def build_user_docs(self):
-        """Build templates for user docs pages, if missing."""
-        # user_docs_path = os.path.join(self.docs_path, "user")
-
-        # license
-        with open(os.path.join(self.app_path, "..", "license.txt"), "r") as license_file:
-            self.app_context["license_text"] = markdown(license_file.read())
-            html = frappe.render_template("templates/autodoc/license.html",
-                                          context=self.app_context)
-
-        with open(os.path.join(self.docs_path, "license.html"), "wb") as license_file:
-            license_file.write(html.encode("utf-8"))
-
-        # contents
-        shutil.copy(os.path.join(frappe.get_app_path("frappe", "templates", "autodoc",
-                                                     "contents.html")), os.path.join(self.docs_path, "contents.html"))
-
-        shutil.copy(os.path.join(frappe.get_app_path("frappe", "templates", "autodoc",
-                                                     "contents.py")), os.path.join(self.docs_path, "contents.py"))
-
-        # install
-        html = frappe.render_template("templates/autodoc/install.md",
-                                      context=self.app_context)
-
-        with open(os.path.join(self.docs_path, "install.md"), "w") as f:
-            f.write(html)
-
-        self.update_index_txt(self.docs_path)
 
     def is_py_module(self, basepath, folders, files):
         return "__init__.py" in files \
