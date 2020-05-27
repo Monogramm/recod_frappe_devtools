@@ -1,7 +1,5 @@
 """Automatically setup docs for a project.
-
-Call from command line:
-	bench build-app-docs app path
+Call from command line: bench build-app-docs app path
 """
 from __future__ import unicode_literals, print_function
 
@@ -41,7 +39,7 @@ def update_index_txt(path):
 
 class SetupDocs(object):
     def __init__(self, app, target_app, extension):
-
+        """Consctuctor for SetupDocs. Init all necessary variables for generating docs."""
         self.list_sidebar = []
         self.app = app
         self.target_app = target_app
@@ -90,7 +88,6 @@ class SetupDocs(object):
 
     def create_general_doc(self):
         """Create docs general home page."""
-
         self.render_autodoc('docs_home.md', os.path.join(self.www_docs_path, 'index.md'),
                             context={'extension': self.extension})
 
@@ -154,14 +151,15 @@ class SetupDocs(object):
         self.add_breadcrumbs_for_user_pages()
 
     def add_breadcrumbs_for_user_pages(self):
-        for basepath, folders, files in os.walk(os.path.join(self.docs_path, 'user')): # pylint: disable=unused-variable
+        for basepath, folders, files in os.walk(
+                os.path.join(self.docs_path, 'user')):  # pylint: disable=unused-variable
             print('List with folders: ' + str(folders))
             for fname in files:
                 if fname.endswith('.md') or fname.endswith('.html'):
                     add_breadcrumbs_tag(os.path.join(basepath, fname))
 
     def add_sidebars(self):
-        '''Add _sidebar.json in each folder in docs'''
+        """Add _sidebar.json in each folder in docs."""
         for basepath, folders, files in os.walk(self.docs_path):  # pylint: disable=unused-variable
             with open(os.path.join(basepath, '_sidebar.json'), 'w') as sidebarfile:
                 sidebarfile.write(frappe.as_json([
@@ -183,7 +181,7 @@ class SetupDocs(object):
                 ]))
 
     def copy_user_assets(self):
-        '''Copy docs/user and docs/assets to the target app'''
+        """Copy docs/user and docs/assets to the target app."""
         print('Copying docs/user and docs/assets...')
         shutil.rmtree(os.path.join(self.docs_path, 'user'),
                       ignore_errors=True)
@@ -193,21 +191,20 @@ class SetupDocs(object):
         # copy user guide if exists
         app_user_docs = os.path.join(self.app_path, 'docs', 'user')
         if os.path.exists(app_user_docs):
-             shutil.copytree(app_user_docs,
-                os.path.join(self.docs_path, 'user'))
+            shutil.copytree(app_user_docs,
+                            os.path.join(self.docs_path, 'user'))
 
         # copy assets if exists
         app_assets_docs = os.path.join(self.app_path, 'docs', 'assets')
         if os.path.exists(app_assets_docs):
             shutil.copytree(app_assets_docs,
-                frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app, 'assets'))
+                            frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app, 'assets'))
 
         # copy index if exists
         app_index_docs = os.path.join(self.app_path, 'docs', 'index.md')
         if os.path.exists(app_index_docs):
             shutil.copy(app_index_docs,
-                frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
-
+                        frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
 
     def make_home_pages(self):
         """Make standard home pages for docs, developer docs, api and models from templates"""

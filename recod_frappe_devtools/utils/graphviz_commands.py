@@ -2,11 +2,7 @@
 # Copyright (c) 2020, Monogramm and Contributors
 # See license.txt
 """Generate UML diagrams for a project.
-
-Call from command line:
-
-	bench build-app-uml app path
-
+Call from command line: bench build-app-uml app path
 """
 from __future__ import unicode_literals, absolute_import
 
@@ -74,7 +70,7 @@ def get_json_from_app(app_name, list_with_modules):
     list_with_json_files = []
     for module in list_with_modules:
         doctype_folder_path = frappe.get_app_path(app_name, module, 'doctype')
-        for folder, garbage, files in os.walk(doctype_folder_path):
+        for folder, pathes, files in os.walk(doctype_folder_path): # pylint: disable=unused-variable
             if '__pycache__' not in folder and os.path.basename(folder) not in ('doctype', 'templates'):
                 if os.path.exists(os.path.join(folder, os.path.basename(folder) + '.json')):
                     list_with_json_files.append(
