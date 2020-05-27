@@ -320,11 +320,12 @@ class SetupDocs(object):
             add_uml(self.app, doc_path, doctype=doctype['name'], extension=self.extension)
 
         # Generate uml for modules
-        list_with_modules = [d for d in os.listdir(self.models_base_path) if os.path.isdir(d)]
+        list_with_modules = [d for d in os.listdir(self.models_base_path) if
+                             os.path.isdir(os.path.join(self.models_base_path, d))]
         for module in list_with_modules:
             module_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
                                               self.app + "module_uml.{}").format(self.extension)
-            add_uml(self.app, module_path, list_with_modules=[module], extension=self.extension)
+        add_uml(self.app, module_path, list_with_modules=[module], extension=self.extension)
 
         # Generate uml for app
         path_to_app_uml = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets", self.app + "_uml")
