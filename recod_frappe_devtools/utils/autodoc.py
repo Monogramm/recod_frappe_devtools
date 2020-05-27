@@ -1,12 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-"""
-frappe.utils.autodoc.
-~~~~~~~~~~~~~~~~~~~~
-
-Inspect elements of a given module and return its objects
-"""
+"""Inspect elements of a given module and return its objects."""
 
 from __future__ import unicode_literals, print_function
 

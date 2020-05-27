@@ -3,7 +3,8 @@
 # See license.txt
 """
 Generate UML diagrams for a project.
-Call from command line: bench build-app-uml app path
+
+Call from command line: bench build-app-uml app path.
 """
 from __future__ import unicode_literals, absolute_import
 

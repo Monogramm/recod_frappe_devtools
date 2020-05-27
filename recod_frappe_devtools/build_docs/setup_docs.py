@@ -1,5 +1,6 @@
 """
 Automatically setup docs for a project.
+
 Call from command line: bench build-app-docs app path
 """
 from __future__ import unicode_literals, print_function
@@ -155,6 +156,7 @@ class SetupDocs(object):
         self.add_breadcrumbs_for_user_pages()
 
     def add_breadcrumbs_for_user_pages(self):
+        """Add breadcrumbs for user pages in the end of file."""
         for basepath, folders, files in os.walk(
                 os.path.join(self.docs_path, 'user')):  # pylint: disable=unused-variable
             print('List with folders: ' + str(folders))
@@ -293,6 +295,7 @@ class SetupDocs(object):
                 f.write(frappe.render_template(template, context))
 
     def write_model_file(self, basepath, module, doctype):
+        """Write model file."""
         doc_uml_path = self.app + "_{}_uml.{}".format(frappe.scrub(doctype), self.extension)
 
         model_path = os.path.join(self.models_base_path, module, doctype + ".html")
@@ -332,6 +335,7 @@ class SetupDocs(object):
         add_uml(self.app, path_to_app_uml, extension=self.extension)
 
     def update_sidebars_in_all_apps(self):
+        """Update file _sidebars.json from all apps."""
         list_apps = frappe.get_installed_apps()
         for app in list_apps:
             if app in self.list_with_app_docs:
@@ -351,6 +355,7 @@ class SetupDocs(object):
 
 
 def get_version(app="frappe"):
+    """Get current version of app."""
     try:
         return frappe.get_attr(app + ".__version__")
     except AttributeError:
@@ -358,6 +363,7 @@ def get_version(app="frappe"):
 
 
 def add_breadcrumbs_tag(path):
+    """Add breadcrumbs tag in the end of file."""
     with open(path, 'r') as f:
         content = frappe.as_unicode(f.read())
     with open(path, 'wb') as f:
