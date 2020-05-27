@@ -1,4 +1,5 @@
-"""Automatically setup docs for a project.
+"""
+Automatically setup docs for a project.
 Call from command line: bench build-app-docs app path
 """
 from __future__ import unicode_literals, print_function
@@ -210,7 +211,7 @@ class SetupDocs(object):
                         frappe.get_app_path(self.target_app, 'www', 'docs', self.target_app))
 
     def make_home_pages(self):
-        """Make standard home pages for docs, developer docs, api and models from templates"""
+        """Make standard home pages for docs, developer docs, api and models from templates."""
         # make dev home page
         with open(os.path.join(self.path, "index.html"), "w") as home:
             home.write(frappe.render_template("templates/autodoc/dev_home.html",

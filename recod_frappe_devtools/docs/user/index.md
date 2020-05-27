@@ -2,7 +2,6 @@
 
 This is the User Guide for **Recod Frappe DevTools**.
 
-
 ## Recod Frappe DevTools
 
 Frappe application to provide more/better development tools.
@@ -30,7 +29,7 @@ bench install-app recod_frappe_devtools
 How to use this application:
 
 Run command
-```
+```sh
 bench build-app-docs
 ```
 
