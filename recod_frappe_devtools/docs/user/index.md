@@ -32,11 +32,7 @@ Run command
 ```sh
 bench build-app-docs
 ```
-
 and refer to url `/docs`. You will see the generated docs from `recod_frappe_devtools/docs` folder.
-
-
-
 
 ## License
 

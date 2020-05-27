@@ -44,9 +44,9 @@ bench build-app-docs
 ```
 | Option        |    Description        | Examples  |
 | ------------- |:-------------:| -----:|
-| --extension      | extension for uml files | svg, png |
-| --target            | Name of application      |   recod_frappe_devtools |
-| --watch            | Watch for changes and rewrite (in progress yet)      |    |
+| --extension | extension for uml files | svg, png |
+| --target | Name of application | recod_frappe_devtools |
+| --watch | Watch for changes and rewrite (in progress yet) |
 
 ----
 
@@ -56,8 +56,8 @@ bench build-app-uml
 
 | Option        |    Description        | Examples  |
 | ------------- |:-------------:| -----:|
-| --modules      | List with modules | argiculture, crm, education |
-| --doctype            | Generate uml for definetely doctype      |   Item |
+| --modules | List with modules | argiculture, crm, education |
+| --doctype | Generate uml for definetely doctype | Item |
 
 ## License
 
