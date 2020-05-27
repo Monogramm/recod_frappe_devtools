@@ -2,62 +2,24 @@
 
 This is the User Guide for **Recod Frappe DevTools**.
 
-## Recod Frappe DevTools
+## Summary
 
 Frappe application to provide more/better development tools.
 
+## Contributing
+
+For information about contributing, see the [Contributing page](https://github.com/Monogramm/recod_frappe_devtools/blob/master/CONTRIBUTING.md).
+
 ## Roadmap
+
 
 See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_devtools/ "Taiga.io monogrammbot-monogrammrecod_frappe_devtools")
 
-## How to use this application
-
-```sh
-bench build-app-docs
-```
-
 ## Install
-
-**Install Frappe application**
 
 ```sh
 bench get-app https://github.com/Monogramm/recod_frappe_devtools
 bench install-app recod_frappe_devtools
-```
-
-## Usage
-
-How to use this application:
-
-Run command
-```sh
-bench build-app-docs
-```
-
-
-and refer to url `/docs`. You will see the generated docs from `recod_frappe_devtools/docs` folder.
-
-## List with options
-
-```sh
-bench build-app-docs
-```
-| Option        |    Description        | Examples  |
-| ------------- |:-------------:| -----:|
-| --extension | extension for uml files | svg, png |
-| --target | Name of application | recod_frappe_devtools |
-| --watch | Watch for changes and rewrite (in progress yet) |
-
-----
-
-```sh
-bench build-app-uml
-```
-
-| Option        |    Description        | Examples  |
-| ------------- |:-------------:| -----:|
-| --modules | List with modules | argiculture, crm, education |
-| --doctype | Generate uml for definetely doctype | Item |
 
 ## License
 

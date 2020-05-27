@@ -2,7 +2,7 @@
 
 This is the User Guide for **Recod Frappe DevTools**.
 
-## Recod Frappe DevTools
+## Summary
 
 Frappe application to provide more/better development tools.
 
@@ -11,28 +11,7 @@ See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_
 
 ## How to use this application
 
-```sh
-bench build-app-docs
-```
-
-## Install
-
-**Install Frappe application**
-
-```sh
-bench get-app https://github.com/Monogramm/recod_frappe_devtools
-bench install-app recod_frappe_devtools
-```
-
-## Usage
-
-How to use this application:
-
-Run command
-```sh
-bench build-app-docs
-```
-and refer to url `/docs`. You will see the generated docs from `recod_frappe_devtools/docs` folder.
+Check out official documentation at <https://monogramm.github.io/recod_frappe_devtools/>.
 
 ## License
 
