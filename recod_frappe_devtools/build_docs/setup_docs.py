@@ -317,18 +317,18 @@ class SetupDocs(object):
                                            self.app + "_{}_uml.{}").format(
                 scrub_doc_name, self.extension)
 
-            add_uml(self.app, doc_path, doctype=doctype['name'])
+            add_uml(self.app, doc_path, doctype=doctype['name'], extension=self.extension)
 
         # Generate uml for modules
         list_with_modules = [d for d in os.listdir(self.models_base_path) if os.path.isdir(d)]
         for module in list_with_modules:
             module_path = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets",
                                               self.app + "module_uml.{}").format(self.extension)
-            add_uml(self.app, module_path, list_with_modules=[module])
+            add_uml(self.app, module_path, list_with_modules=[module], extension=self.extension)
 
         # Generate uml for app
         path_to_app_uml = frappe.get_app_path(self.target_app, 'www', 'docs', self.app, "assets", self.app + "_uml")
-        add_uml(self.app, path_to_app_uml)
+        add_uml(self.app, path_to_app_uml, extension=self.extension)
 
     def update_sidebars_in_all_apps(self):
         list_apps = frappe.get_installed_apps()

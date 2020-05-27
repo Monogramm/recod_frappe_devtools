@@ -2,11 +2,18 @@
 <!-- add-breadcrumbs -->
 
 {% set doc = frappe.get_doc("DocType", doctype) %}
+{% macro doctype_link(app, doctype) %}
+{% set module = frappe.db.get_value("DocType", doctype, "module") %}
+{% if doctype and module %}
+<a href="/docs/{{ scrub(module) }}/{{ app.docs_version }}/models/{{
+		scrub(module) }}/{{ scrub(doctype) }}">{{ doctype }}</a>
+{% endif %}
+{% endmacro %}
+
 
 <h1>{{ doctype }}</h1>
 <div class="dev-header">
-    {{ version(doctype) }}
-    {{ app.source_link }}
+     <a href="{{ app.source_link }}">{{ version_of_app }}</a>
 </div>
 
 {% if doc.issingle %}<span class="label label-info">Single</span>{% endif %}
