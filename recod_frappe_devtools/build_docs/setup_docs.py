@@ -8,6 +8,7 @@ from __future__ import unicode_literals, print_function
 import os, json, frappe, shutil
 
 from recod_frappe_devtools.commands import add_uml
+from recod_frappe_devtools.utils import autodoc
 
 
 def is_py_module(basepath, folders, files):
@@ -81,7 +82,9 @@ class SetupDocs(object):
             },
             "get_doctype_app": frappe.get_doctype_app,
             'app_list': self.app_list,
-            'extension': extension
+            'extension': extension,
+            'version_of_app': autodoc.get_version(self.app),
+            'm': autodoc.automodule(self.app)
         }
         self.extension = extension
 
