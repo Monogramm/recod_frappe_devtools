@@ -1,15 +1,12 @@
 <!-- title: {{ doctype }} -->
 <!-- add-breadcrumbs -->
 
-{% from "templates/autodoc/macros.html" import automodule, version,
-source_link, doctype_link %}
 {% set doc = frappe.get_doc("DocType", doctype) %}
 
 <h1>{{ doctype }}</h1>
 <div class="dev-header">
     {{ version(doctype) }}
-    {{ source_link(app, app.name + "/" + scrub(doc.module)
-    + "/doctype/" + scrub(doctype), True) }}
+    {{ app.source_link }}
 </div>
 
 {% if doc.issingle %}<span class="label label-info">Single</span>{% endif %}

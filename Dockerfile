@@ -1,4 +1,4 @@
-FROM monogramm/docker-erpnext:11-debian
+FROM monogramm/docker-erpnext:12-debian
 
 # Install Google Chrome & Chrome WebDriver for UI tests
 RUN set -ex; \

@@ -1,10 +1,8 @@
 <!-- title: {{ app.title }}: Developer Docs -->
 <!-- no-breadcrumbs -->
 
-{% from "templates/autodoc/macros.html" import source_link, version %}
 <div class="dev-header">
-{{ version(app.name) }}
-{{ source_link(app, app.name, True) }}
+{{ version_of_app }}
 </div>
 
 <table class="table table-bordered" style='max-width: 400px;'>
