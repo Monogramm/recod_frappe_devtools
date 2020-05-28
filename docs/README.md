@@ -12,7 +12,6 @@ For information about contributing, see the [Contributing page](https://github.c
 
 ## Roadmap
 
-
 See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_devtools/ "Taiga.io monogrammbot-monogrammrecod_frappe_devtools")
 
 ## Install
@@ -20,6 +19,46 @@ See [Taiga.io](https://tree.taiga.io/project/monogrammbot-monogrammrecod_frappe_
 ```sh
 bench get-app https://github.com/Monogramm/recod_frappe_devtools
 bench install-app recod_frappe_devtools
+```
+
+## Commands
+
+Available commands:
+
+-  `build-app-docs`
+-  `build-app-uml`
+
+### Build application documentation
+
+```sh
+bench build-app-docs app 
+```
+
+| Option        |    Description        | Examples  |
+| ------------- | ------------- | -----:|
+| --extension | Extension for uml files | svg, png |
+| --target | Name of application | recod_frappe_devtools |
+| --watch | Watch for changes and rewrite (in progress yet) |
+
+Then, go to URL `/docs`.
+You will see the generated documentation from your application.
+
+#### Screenshots
+
+<details>
+<!--  TODO Add screen shots of sample documentation -->
+</details>
+
+### Build application UML Doctype diagram
+
+```sh
+bench build-app-uml /tmp/uml.png
+```
+
+| Option        |    Description        | Examples  |
+| ------------- | ------------- | -----:|
+| --modules | Modules of the application for which UML should be generated | agriculture, crm, education |
+| --doctype | Generate UML for specific doctype | Item |
 
 ## License
 
