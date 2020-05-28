@@ -55,7 +55,7 @@ class SetupDocs(object):
         try:
             with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'r') as f:
                 self.list_with_app_docs = f.read().split('\n')
-        except FileNotFoundError:
+        except Exception:
             self.list_with_app_docs = []
 
         self.docs_config = frappe.get_module(self.app + ".config.docs")
