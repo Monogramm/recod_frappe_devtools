@@ -52,9 +52,11 @@ class SetupDocs(object):
 
         self.hooks = frappe.get_hooks(app_name=self.app)
         self.app_title = self.hooks.get("app_title")[0]
-
-        with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'r') as f:
-            self.list_with_app_docs = f.read().split('\n')
+        try:
+            with open(frappe.get_app_path('recod_frappe_devtools', 'docs', 'docs_apps.txt'), 'r') as f:
+                self.list_with_app_docs = f.read().split('\n')
+        except FileNotFoundError:
+            self.list_with_app_docs = []
 
         self.docs_config = frappe.get_module(self.app + ".config.docs")
         version = get_version(app=self.app)
@@ -168,7 +170,7 @@ class SetupDocs(object):
         """Add _sidebar.json in each folder in docs."""
         for basepath, folders, files in os.walk(self.docs_path):  # pylint: disable=unused-variable
             with open(os.path.join(basepath, '_sidebar.json'), 'w') as sidebarfile:
-                sidebarfile.write(frappe.as_json([
+                content = [
                     {"title": "Search Docs ...", "type": "input", "route": "/search_docs"},
                     {"title": "Docs Home", "route": "/docs"},
                     {"title": "{} - Docs Home".format(self.app_context['app'].get("title")),
@@ -179,12 +181,16 @@ class SetupDocs(object):
                      "route": "/docs/{0}/{1}/api".format(self.target_app, self.app_context["app"].get("docs_version"))},
                     {"title": "{} - Models (Reference)".format(self.app_context['app'].get("title")),
                      "route": "/docs/{0}/{1}/models".format(self.target_app,
-                                                            self.app_context["app"].get("docs_version"))},
-                    {"title": "{} - Improve Docs".format(self.app_context['app'].get("title")), "route":
+                                                            self.app_context['app'].get('docs_version'))},
+                    {"title": "{} - Improve Docs".format(self.app_context['app'].get('title')), "route":
                         "{0}/tree/{1}/{2}/docs".format(self.docs_config.source_link,
-                                                       self.app_context["app"].get("branch"), self.app)}
+                                                       self.app_context['app'].get('branch'), self.app)}
 
-                ]))
+                ]
+                if not os.path.isfile(frappe.get_app_path(self.target_app, 'docs', 'user', 'index.md')):
+                    content.remove({"title": "{} - User Guide".format(self.app_context['app'].get("title")),
+                                    "route": "/docs/{}/user".format(self.target_app)})
+                sidebarfile.write(frappe.as_json(content))
 
     def copy_user_assets(self):
         """Copy docs/user and docs/assets to the target app."""
