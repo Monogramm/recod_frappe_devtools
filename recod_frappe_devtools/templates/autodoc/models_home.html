@@ -1,0 +1,20 @@
+<!-- title: {{ app.title }}: Models (DocTypes) -->
+<!-- add-breadcrumbs -->
+
+
+<h1>{{ app.title }}: Models (DocTypes)</h1>
+<div class="dev-header">
+ <a href="{{ app.source_link }}"> Version {{ version_of_app }}</a>
+</div>
+
+<p>Browse DocTypes by Module</p>
+
+<h3>Contents</h3>
+
+{index}
+<h3>Class diagramm</h3>
+{% set path_to_app_uml = "../assets/" +  app.name + "_uml" + "." + extension %}
+<a href={{path_to_app_uml}}><img src={{path_to_app_uml}}></a>
+
+
+<!-- autodoc -->

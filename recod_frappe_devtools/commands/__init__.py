@@ -1,0 +1,90 @@
+"""Commands for creating docs in other apps."""
+
+from __future__ import unicode_literals, absolute_import
+import click
+import os, shutil
+import frappe
+from frappe.commands import pass_context
+from recod_frappe_devtools.utils.graphviz_commands import add_uml, get_json_from_app
+
+@click.command('build-app-docs', help="Setup docs in target folder of target app")
+@pass_context
+@click.argument('app')
+@click.option('--docs-version', default='current')
+@click.option('--target', default=None)
+@click.option('--watch', default=False, is_flag=True, help='Watch for changes and rewrite')
+@click.option('--extension', default='svg', help = 'Extension of UML files')
+def build_app_docs(context, app, docs_version="current", target=None, local=False, watch=False ,extension='svg'):
+    """Setup docs in target folder of target app."""
+    from frappe.utils import watch as start_watch
+    from recod_frappe_devtools.build_docs.setup_docs import add_breadcrumbs_tag
+
+    for site in context.sites:
+        _build_docs_once(site, app, docs_version, target, extension=extension)
+
+        if watch:
+            def trigger_make(source_path, event_type):
+                if "/docs/user/" in source_path:
+                    # user file
+                    target_path = frappe.get_app_path(target, 'www', 'docs', 'user',
+                                                      os.path.relpath(source_path,
+                                                                      start=frappe.get_app_path(app, 'docs', 'user')))
+                    shutil.copy(source_path, target_path)
+                    add_breadcrumbs_tag(target_path)
+
+                if source_path.endswith('/docs/index.md'):
+                    target_path = frappe.get_app_path(target, 'www', 'docs', 'index.md')
+                    shutil.copy(source_path, target_path)
+
+            apps_path = frappe.get_app_path(app)
+            start_watch(apps_path, handler=trigger_make)
+
+
+def _build_docs_once(site, app, docs_version, target, only_content_updated=False , extension='svg'):
+    from recod_frappe_devtools.build_docs.setup_docs import SetupDocs
+    try:
+
+        frappe.init(site=site)
+        frappe.connect()
+        make = SetupDocs(app, target, extension)
+        if not only_content_updated:
+
+            # Build docs for current app
+            make.build(docs_version)
+            # Add sidebars in folders
+            make.add_sidebars()
+
+            # Add documentation for application
+            list_with_modules = [app]
+            if get_json_from_app(app, list_with_modules):
+                make.add_uml_in_doc()
+            else:
+                print("UML diagram has not been generated")
+            make.update_sidebars_in_all_apps()
+
+    finally:
+        frappe.destroy()
+
+
+@click.command('build-app-uml', help="Build uml for application")
+@pass_context
+@click.argument('app')
+@click.argument('path')
+@click.option('--modules', help='Modules of the application for which UML should be generated')
+@click.option('--doctype', help='Generate UML for specific doctype')
+def build_app_uml(context, app, path, modules, doctype=None):
+    """Generate UML diagram of target app."""
+    modules_list = []
+    if modules:
+        modules_list = modules.split(',')
+
+    if len(path.split('.')) < 2:
+        print("Incorrect path format")
+        return
+    extension = path.split('.')[1]
+    add_uml(app, path, extension, modules_list, doctype)
+
+
+commands = [
+    build_app_docs, build_app_uml
+]

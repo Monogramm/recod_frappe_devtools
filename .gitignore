@@ -193,3 +193,5 @@ typings/
 # Frappe
 public/
 services/
+
+recod_frappe_devtools/docs/docs_apps.txt
