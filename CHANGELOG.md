@@ -1,29 +1,29 @@
 # Changelog
 
-<a name="0.0.1"></a>
+<a name="0.9.0"></a>
 
-## 0.0.1 (2020-03-13)
+## 0.9.0 (2020-09-20)
 
 ### Added
 
--   🎉 Initial commit \[[9801fb4](https://github.com/Monogramm/recod_frappe_devtools/commit/9801fb450678c0a1f248f6cbf561a9426cab0f5f)]
+-   ✨ Prepare release \[[a350b44](https://github.com/Monogramm/recod_frappe_devtools/commit/a350b4401cf82eb8dfbdcba64826e548a2a29455)]
+-   🎉 Initialize template \[[4abcb0b](https://github.com/Monogramm/recod_frappe_devtools/commit/4abcb0b5c68c07486849fc32358dfe52b3ddaf74)]
 
 ### Changed
 
--   💄 Change format for app name in doc \[[1337f4c](https://github.com/Monogramm/recod_frappe_devtools/commit/1337f4c07c491f0f04b7ebfe22c96a4ede84f3fd)]
--   🍱 Change icon for Docs section in README \[[5adb9d4](https://github.com/Monogramm/recod_frappe_devtools/commit/5adb9d4c56cc8e427cc77510b45eff01d0a9d12b)]
+-   🔧 Improve configuration \[[be76969](https://github.com/Monogramm/recod_frappe_devtools/commit/be76969601971517d542ac685a5f41be36875839)]
+
+### Fixed
+
+-   💚 Improve CI tests \[[5404f38](https://github.com/Monogramm/recod_frappe_devtools/commit/5404f38b8b7233c3e77a772eb65928b3005cb7a7)]
+-   💚 Stop supporting Frappe 10 and Python 2 \[[f74d3d8](https://github.com/Monogramm/recod_frappe_devtools/commit/f74d3d8c76eafa469fa8fc5d4e5d37102738303c)]
+-   💚 Allow tests on all sites \[[6711e59](https://github.com/Monogramm/recod_frappe_devtools/commit/6711e59b2f71ce7559d3f4f9dd0d33cfd5a3be37)]
 
 ### Security
 
--   🔒 Upgrade minimist \[[e100935](https://github.com/Monogramm/recod_frappe_devtools/commit/e100935077d117e780f4656f2ff5147bbab24c7d)]
+-   🔒 Fix potential security vulnerabilities \[[91430f4](https://github.com/Monogramm/recod_frappe_devtools/commit/91430f46bda6e307aa4fb6f48c80393d62a81eef)]
 
 ### Miscellaneous
 
--   Feature/new branch ([#1](https://github.com/Monogramm/recod_frappe_devtools/issues/1)) \[[694fe5c](https://github.com/Monogramm/recod_frappe_devtools/commit/694fe5c032af529aa960b00513bd9040715edf2c)]
--   Merge pull request [#2](https://github.com/Monogramm/recod_frappe_devtools/issues/2) from codacy-badger/codacy-badge \[[3b6fa9a](https://github.com/Monogramm/recod_frappe_devtools/commit/3b6fa9a46a252511da5ae27b49ee5e527c40c0bb)]
--   Add Codacy badge \[[6b1cea6](https://github.com/Monogramm/recod_frappe_devtools/commit/6b1cea6e61d88c8d44f0ab7fd9004e51d8c364de)]
--   📝 Remove unused info in PR template \[[3ce39a6](https://github.com/Monogramm/recod_frappe_devtools/commit/3ce39a659e2744801753168469e63b595c454126)]
--   📝 Update docs and add badge \[[3e03e6b](https://github.com/Monogramm/recod_frappe_devtools/commit/3e03e6bf472e93cc0204965113bdcb4bb9a4660d)]
--   Set theme jekyll-theme-cayman \[[997edd0](https://github.com/Monogramm/recod_frappe_devtools/commit/997edd01d6212271460c49a8b72f4605241a55e3)]
--   📝 Documentation directory \[[19b36b7](https://github.com/Monogramm/recod_frappe_devtools/commit/19b36b77d804ae299d4cd2e0eac398d36e12f127)]
--   📝 Add changelog \[[821a537](https://github.com/Monogramm/recod_frappe_devtools/commit/821a53726fc81b88b534e3a55e6c972fa7793a52)]
+-   📝 Add links to generate Frappe docs. \[[889c36d](https://github.com/Monogramm/recod_frappe_devtools/commit/889c36dc2c50a9d083abf114cde2ad04827910c5)]
+-   Initial commit \[[c502702](https://github.com/Monogramm/recod_frappe_devtools/commit/c502702955a59989956b167e21a8f402ea306f20)]
