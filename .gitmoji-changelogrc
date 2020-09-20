@@ -2,6 +2,6 @@
   "project": {
     "name": "recod_frappe_devtools",
     "description": "Frappe application to provide more/better development tools.",
-    "version": "0.0.1"
+    "version": "0.9.0"
   }
 }
