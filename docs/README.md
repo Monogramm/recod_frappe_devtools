@@ -2,9 +2,7 @@
 
 This is the User Guide for **Recod Frappe DevTools**.
 
-## Summary
-
-Frappe application to provide more/better development tools.
+For the user guide and technical documentation, check the Frappe [app documentation](https://github.com/Monogramm/recod_frappe_devtools/blob/master/recod_frappe_devtools/docs) or compile it locally using [recod_frappe_devtools](https://github.com/Monogramm/recod_frappe_devtools).
 
 ## Contributing
 
