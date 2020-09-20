@@ -56,10 +56,6 @@ console() {
     dc -it "${1}" exec erpnext_app bench console ${@:2}
 }
 
-## TODO Add function to initialize from template
-#   - Replace all occurences of `recod_frappe_devtools` and `Recod Frappe DevTools` in all files
-#   - Rename all directories `recod_frappe_devtools`
-
 prepare_release() {
     NEW_VERSION=${1}
     if [ -z "${NEW_VERSION}" ] ; then
@@ -70,7 +66,7 @@ prepare_release() {
     log 'Updating Frappe app version...'
     sed -i \
         -e "s|__version__ = '.*'|__version__ = '${NEW_VERSION}'|g" \
-        ./recod_erpnext_design/__init__.py
+        ./recod_frappe_devtools/__init__.py
 
     log 'Updating gitmoji-changelog version...'
     sed -i \
